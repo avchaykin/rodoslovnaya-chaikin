@@ -1,0 +1,3192 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<meta name="robots" content="noindex, nofollow">
+<title>Родословная Чайкиных</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Alegreya:ital,wght@0,500;0,700;1,500&family=PT+Sans:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  /* Layout: compact pedigree in three directions, or one person at a time with a minimap; editor dialog and research journal below */
+  :root {
+    --bg: #edf0ec;
+    --paper: #fbfcfa;
+    --ink: #1f2a2c;
+    --muted: #4d5c59;
+    --line: #9fb0aa;
+    --accent: #2f5d62;
+    --male: #4c6f96;
+    --female: #964659;
+    --unknown-border: #b3c0bb;
+    --ask: #9a5a12;
+    --page: 1280px;
+    --bar-h: 46px;
+    --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+    --ev-world: #4f6688; --ev-country: #9a3b3b; --ev-region: #2f6f5e; --ev-place: #8a6418;
+    --ivy-stem: #5b5a2e; --ivy-1: #2f6b35; --ivy-2: #3f8040; --ivy-3: #557f2f; --ivy-vein: rgba(235, 245, 220, .55);
+    --clem-white: #fcedf0; --clem-white-edge: #dcb6be; --clem-blue: #4c62c2; --clem-blue-edge: #2f3f8a; --clem-eye: #c9a23c; --clem-stamen: #f1e2a2;
+    --shadow: 0 2px 10px rgba(30, 50, 50, .10);
+    --font-display: "Alegreya", Georgia, "Times New Roman", serif;
+    --font-body: "PT Sans", system-ui, -apple-system, sans-serif;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #151b1c; --paper: #1f2729; --ink: #e5ece9; --muted: #98a8a4;
+      --line: #4f605d; --accent: #8cc2c4; --male: #8fb0d6; --female: #dc97aa;
+      --unknown-border: #3e4d4b; --ask: #e2a85e; --shadow: 0 2px 10px rgba(0, 0, 0, .35);
+      --ev-world: #9db4d6; --ev-country: #e09a92; --ev-region: #86c7b2; --ev-place: #e0bd6e;
+      --ivy-stem: #a59a62; --ivy-1: #5f9e58; --ivy-2: #79b36a; --ivy-3: #8fae55; --ivy-vein: rgba(20, 35, 20, .45);
+      --clem-white: #f4e1e6; --clem-white-edge: #b48d96; --clem-blue: #7f95e6; --clem-blue-edge: #4c5fae; --clem-eye: #d9b24a; --clem-stamen: #f6e7a8;
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #151b1c; --paper: #1f2729; --ink: #e5ece9; --muted: #98a8a4;
+    --line: #4f605d; --accent: #8cc2c4; --male: #8fb0d6; --female: #dc97aa;
+    --unknown-border: #3e4d4b; --ask: #e2a85e; --shadow: 0 2px 10px rgba(0, 0, 0, .35);
+    --ev-world: #9db4d6; --ev-country: #e09a92; --ev-region: #86c7b2; --ev-place: #e0bd6e;
+    --ivy-stem: #a59a62; --ivy-1: #5f9e58; --ivy-2: #79b36a; --ivy-3: #8fae55; --ivy-vein: rgba(20, 35, 20, .45);
+      --clem-white: #f4e1e6; --clem-white-edge: #b48d96; --clem-blue: #7f95e6; --clem-blue-edge: #4c5fae; --clem-eye: #d9b24a; --clem-stamen: #f6e7a8;
+    color-scheme: dark;
+  }
+
+  * { box-sizing: border-box; }
+  [hidden] { display: none !important; }
+  body {
+    background: var(--bg); color: var(--ink);
+    font-family: var(--font-body); font-size: 15px; line-height: 1.5;
+    padding-left: max(16px, env(safe-area-inset-left, 0px));
+    padding-right: max(16px, env(safe-area-inset-right, 0px));
+  }
+  /* Верхняя панель: все переключатели в одну компактную строку */
+  .menubar {
+    position: sticky; top: 0; z-index: 12; display: flex; align-items: center; gap: 8px;
+    height: var(--bar-h); padding: 0 12px; margin: 0 calc(-1 * max(16px, env(safe-area-inset-right, 0px))) 0 calc(-1 * max(16px, env(safe-area-inset-left, 0px)));
+    background: color-mix(in srgb, var(--paper) 92%, transparent); backdrop-filter: saturate(1.2) blur(8px);
+    border-bottom: 1px solid var(--line); overflow-x: auto; scrollbar-width: none; white-space: nowrap;
+  }
+  .menubar::-webkit-scrollbar { display: none; }
+  .mb-title { font-family: var(--font-display); font-weight: 700; font-size: 17px; margin-right: 6px; flex: none; }
+  .mb-group { display: inline-flex; gap: 4px; align-items: center; flex: none; }
+  .mb-group[hidden], .seg[hidden], .chip[hidden] { display: none; }
+  .mb-spacer { flex: 1; min-width: 8px; }
+  .menubar .status { font-size: 12px; color: var(--muted); flex: none; }
+  .seg { display: inline-flex; border: 1px solid var(--line); border-radius: 6px; overflow: hidden; flex: none; background: var(--paper); }
+  .seg button {
+    font: inherit; font-size: 12.5px; height: 28px; padding: 0 10px; border: 0; background: transparent; color: var(--ink); cursor: pointer;
+    transition: background .15s, color .15s;
+  }
+  .seg.icons button { width: 30px; padding: 0; display: grid; place-items: center; }
+  .seg button svg { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+  .seg button + button { border-left: 1px solid var(--line); }
+  .seg button:hover { background: var(--bg); }
+  .seg button[aria-pressed="true"] { background: var(--accent); color: var(--paper); font-weight: 700; }
+  .seg button:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+  /* Переключатель-«чип»: флажок спрятан, состояние видно по заливке */
+  .chip, .chip-btn {
+    display: inline-flex; align-items: center; gap: 5px; height: 28px; padding: 0 10px; border-radius: 14px; flex: none;
+    font: inherit; font-size: 12.5px; color: var(--muted); background: transparent; border: 1px solid var(--line); cursor: pointer;
+    text-transform: none; letter-spacing: 0; transition: background .15s, color .15s, border-color .15s;
+  }
+  .chip input { position: absolute; opacity: 0; width: 1px; height: 1px; pointer-events: none; }
+  .chip:has(input:checked) { color: var(--ink); background: color-mix(in srgb, var(--accent) 12%, var(--paper)); border-color: color-mix(in srgb, var(--accent) 55%, var(--line)); }
+  .chip:has(input:focus-visible), .chip-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+  .chip:hover, .chip-btn:hover { color: var(--ink); }
+  .chip .sw { width: 8px; height: 8px; border-radius: 50%; background: var(--evc); opacity: .35; }
+  .chip:has(input:checked) .sw { opacity: 1; }
+  .ivy-btn { border: 1px solid var(--line); border-radius: 50%; width: 28px; height: 28px; color: var(--ivy-1); }
+  .ivy-btn svg .fill { fill: currentColor; stroke: none; }
+  .ivy-btn[aria-pressed="true"] { background: var(--ivy-1); color: var(--paper); border-color: var(--ivy-1); }
+  /* Плющ поверх древа: не перехватывает клики */
+  .tree svg.ivy { z-index: 2; pointer-events: none; }
+  .tree .ask-btn, .tree .deck-btn { z-index: 3; }
+  .tree svg.ivy .ivy-stem { fill: none; stroke: var(--ivy-stem); stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+  .tree svg.ivy .ivy-stem.twin { stroke-width: 1.3; opacity: .85; }
+  .tree svg.ivy .ivy-stem.tendril { stroke-width: 1.1; opacity: .9; }
+  .tree svg.ivy .ivy-leaf { transform-box: fill-box; transform-origin: 50% 100%; }
+  .tree svg.ivy .ivy-flower { transform-box: fill-box; transform-origin: 50% 50%; }
+  .tree svg.ivy .ivy-flower .petal { stroke-width: .7; }
+  .tree svg.ivy .ivy-flower.f .petal { fill: var(--clem-white); stroke: var(--clem-white-edge); }
+  .tree svg.ivy .ivy-flower.m .petal { fill: var(--clem-blue); stroke: var(--clem-blue-edge); }
+  .tree svg.ivy .ivy-flower .eye { fill: var(--clem-eye); stroke: none; }
+  .tree svg.ivy .ivy-flower .stamen { fill: var(--clem-stamen); stroke: none; }
+  .tree svg.ivy.alive .ivy-flower { animation: ivy-sway var(--sway-t, 5s) ease-in-out var(--sway-d, 0s) infinite alternate; }
+  @media (prefers-reduced-motion: reduce) { .tree svg.ivy.alive .ivy-flower { animation: none; } }
+  .tree svg.ivy.alive .ivy-leaf { animation: ivy-sway var(--sway-t, 4s) ease-in-out var(--sway-d, 0s) infinite alternate; }
+  @keyframes ivy-sway { from { rotate: calc(-1 * var(--sway, 5deg)); } to { rotate: var(--sway, 5deg); } }
+  @media (prefers-reduced-motion: reduce) { .tree svg.ivy.alive .ivy-leaf { animation: none; } }
+  .tree svg.ivy .ivy-leaf { stroke: var(--ivy-vein); stroke-width: .7; paint-order: stroke; }
+  .tree svg.ivy .ivy-leaf.v1 { fill: var(--ivy-1); }
+  .tree svg.ivy .ivy-leaf.v2 { fill: var(--ivy-2); }
+  .tree svg.ivy .ivy-leaf.v3 { fill: var(--ivy-3); }
+  .help-btn { font: 700 15px/1 var(--font-display); border: 1px solid var(--line); border-radius: 50%; width: 28px; height: 28px; color: var(--accent); }
+  .help-btn[aria-expanded="true"] { background: var(--accent); color: var(--paper); border-color: var(--accent); }
+  .help-pop {
+    position: fixed; z-index: 30; top: calc(var(--bar-h) + 6px); right: 12px; width: min(400px, calc(100vw - 24px));
+    background: var(--paper); border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px 12px;
+    box-shadow: 0 10px 30px rgba(20, 35, 35, .18); animation: swap .18s var(--ease-out);
+    max-height: calc(100vh - var(--bar-h) - 24px); overflow-y: auto;
+  }
+  .help-hint { margin: 0 0 12px; font-size: 14px; }
+  .legend { display: grid; grid-template-columns: 1fr 1fr; gap: 8px 14px; font-size: 13px; color: var(--muted); padding-bottom: 12px; border-bottom: 1px solid var(--line); }
+  .legend span { display: inline-flex; align-items: center; gap: 8px; }
+  .legend i { width: 22px; height: 14px; border-radius: 1px; display: inline-block; flex: none; }
+  .legend .m { background: var(--paper); border: 1.5px solid var(--line); border-top: 3px solid var(--male); }
+  .legend .f { background: var(--paper); border: 1.5px solid var(--line); border-top: 3px solid var(--female); }
+  .legend .u { border: 1.5px dashed var(--unknown-border); }
+  .legend .a { width: 18px; height: 18px; border-radius: 50%; display: grid; place-items: center; background: var(--ask); color: var(--paper); font: 700 11px/1 var(--font-display); font-style: normal; }
+  .help-list { margin: 12px 0 0; font-size: 13px; display: grid; gap: 2px; }
+  .help-list dt { font-weight: 700; margin-top: 6px; }
+  .help-list dd { margin: 0; color: var(--muted); }
+  .help-foot { margin: 12px 0 0; font-size: 12px; color: var(--muted); }
+  .check { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; color: var(--muted); cursor: pointer; text-transform: none; letter-spacing: 0; }
+  .check input { width: auto; margin: 0; }
+
+  /* Древо */
+  .tree-wrap { overflow-x: auto; padding-block: 24px 28px; -webkit-overflow-scrolling: touch; }
+  .tree { position: relative; margin: 0 auto; }
+  .tree svg { position: absolute; inset: 0; overflow: visible; pointer-events: none; }
+  .tree svg path { fill: none; stroke: var(--line); stroke-width: 1.5; }
+
+  .card {
+    position: absolute; left: 0; top: 0; font: inherit; color: inherit; text-align: center;
+    background: var(--paper); border: 1px solid var(--line); border-top: 4px solid var(--accent);
+    border-radius: 2px; padding: 9px 10px; box-shadow: var(--shadow); cursor: pointer;
+    transition: transform .15s ease, box-shadow .15s ease;
+  }
+  .card:hover { transform: translateY(-2px); box-shadow: 0 6px 18px rgba(30, 50, 50, .18); }
+  .card:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .card.m { border-top-color: var(--male); }
+  .card.f { border-top-color: var(--female); }
+  .card.root { border-width: 2px; border-top-width: 5px; }
+  .card.compact { padding: 6px 8px; }
+  .card.compact .name { font-size: 15px; }
+  .card.compact .role { font-size: 10px; letter-spacing: .03em; }
+  .card.compact .place, .card.compact .has-notes { display: none; }
+  .card-main {
+    all: unset; display: block; width: 100%; cursor: pointer; text-align: center; box-sizing: border-box;
+  }
+  .card-main:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .photo { display: block; object-fit: cover; border-radius: 50%; background: var(--bg); border: 2px solid var(--line); }
+  .card .photo { width: 48px; height: 48px; margin: 2px auto 4px; }
+  .card.compact .photo { width: 38px; height: 38px; }
+  .cv-card .photo { width: 120px; height: 120px; border-radius: 6px; float: right; margin: 0 0 8px 12px; }
+  .e-photo { display: flex; gap: 10px; align-items: center; text-transform: none; letter-spacing: 0; font-size: 13px; }
+  .e-photo .photo { width: 56px; height: 56px; }
+  .e-photo input[type=file] { font-size: 13px; padding: 4px; }
+  .sibs { margin-top: 6px; padding-top: 5px; border-top: 1px dashed var(--line); display: flex; flex-wrap: wrap; gap: 3px; justify-content: center; }
+  .sibs .sibs-k { width: 100%; font-size: 10px; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); }
+  .sib {
+    font: inherit; font-size: 11.5px; line-height: 1.25; padding: 1px 6px; border-radius: 10px; cursor: pointer; max-width: 100%;
+    background: var(--bg); color: var(--ink); border: 1px solid var(--line); text-align: left; overflow-wrap: anywhere;
+  }
+  .sib::before { content: ""; display: inline-block; width: 6px; height: 6px; border-radius: 50%; margin-right: 5px; vertical-align: 1px; background: var(--line); }
+  .sib.m::before { background: var(--male); }
+  .sib.f::before { background: var(--female); }
+  .sib.add::before { display: none; }
+  .sib.add { border: 1px dashed var(--unknown-border); color: var(--muted); background: transparent; }
+  .sib:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+  .deck-sheet {
+    position: absolute; background: var(--paper); border: 1px solid var(--line); border-radius: 2px; box-shadow: var(--shadow);
+  }
+  .deck-btn {
+    position: absolute; top: -10px; right: -10px; z-index: 1; min-width: 24px; height: 22px; padding: 0 7px;
+    border-radius: 11px; border: 1px solid var(--paper); background: var(--accent); color: var(--paper);
+    font: 700 11px/20px var(--font-body); cursor: pointer; white-space: nowrap;
+  }
+  .deck-btn.add { background: var(--paper); color: var(--muted); border: 1px dashed var(--unknown-border); }
+  .deck-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .card.sib-card { background: var(--bg); }
+  .card.sib-card.add { background: transparent; border: 1.5px dashed var(--unknown-border); box-shadow: none; color: var(--muted); font-size: 13px; }
+  .tree svg path.sib { stroke-dasharray: 4 3; }
+  .cv-card .sibs { justify-content: flex-start; margin-top: 12px; }
+  .cv-card .sib { font-size: 13px; padding: 3px 9px; }
+  .card.ph {
+    background: transparent; border: 1.5px dashed var(--unknown-border); box-shadow: none;
+    color: var(--muted); padding: 5px 4px; font-size: 13px;
+  }
+  .card .role { font-size: 11px; text-transform: uppercase; letter-spacing: .07em; color: var(--muted); }
+  .card .name { font-family: var(--font-display); font-weight: 700; font-size: 17px; line-height: 1.15; margin: 3px 0; overflow-wrap: anywhere; }
+  .card .dates { font-size: 13px; font-variant-numeric: tabular-nums; }
+  .card .place { font-size: 12px; color: var(--muted); }
+  .card .has-notes { font-size: 11px; color: var(--accent); margin-top: 2px; }
+  @media (prefers-reduced-motion: reduce) { .card { transition: none; } .card:hover { transform: none; } }
+
+  .empty {
+    max-width: 640px; margin: 24px auto; padding: 28px; text-align: center;
+    border: 1.5px dashed var(--unknown-border); border-radius: 10px; color: var(--muted);
+  }
+
+  /* По одному */
+  .card-view { max-width: 640px; margin: 16px auto 32px; display: grid; gap: 12px; }
+  .minimap { background: var(--paper); border: 1px solid var(--line); border-radius: 8px; padding: 6px; }
+  .minimap svg { display: block; width: 100%; height: 150px; }
+  .minimap .mm-line { fill: none; stroke: var(--line); stroke-width: 1.2; }
+  .minimap .mm-dot { fill: var(--accent); }
+  .minimap .mm-dot.m { fill: var(--male); }
+  .minimap .mm-dot.f { fill: var(--female); }
+  .minimap .mm-hit { fill: transparent; cursor: pointer; }
+  .minimap .mm-cur { fill: none; stroke: var(--ink); stroke-width: 2; }
+  .minimap-hint { font-size: 12px; color: var(--muted); padding: 2px 4px 0; }
+  .cv-label { font-size: 12px; text-transform: uppercase; letter-spacing: .07em; color: var(--muted); }
+  .cv-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .nav-btn {
+    font: inherit; color: inherit; text-align: left; cursor: pointer; min-height: 58px; min-width: 0;
+    padding: 8px 12px; background: var(--paper); border: 1px solid var(--line); border-top: 3px solid var(--accent); border-radius: 2px;
+  }
+  .nav-btn.m { border-top-color: var(--male); }
+  .nav-btn.f { border-top-color: var(--female); }
+  .nav-btn.ph { background: transparent; border: 1.5px dashed var(--unknown-border); color: var(--muted); }
+  .nav-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .nav-btn .k { display: block; font-size: 11px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); }
+  .nav-btn .v { display: block; font-family: var(--font-display); font-weight: 700; font-size: 16px; line-height: 1.2; overflow-wrap: anywhere; }
+  .nav-btn.ph .v { font-weight: 500; font-style: italic; }
+  .cv-card {
+    background: var(--paper); border: 1px solid var(--line); border-top: 5px solid var(--accent);
+    border-radius: 2px; padding: 16px 18px; box-shadow: var(--shadow); min-width: 0;
+  }
+  .cv-card.m { border-top-color: var(--male); }
+  .cv-card.f { border-top-color: var(--female); }
+  .cv-card h2 { font-family: var(--font-display); font-size: 26px; line-height: 1.15; margin: 2px 0 4px; overflow-wrap: anywhere; text-wrap: balance; }
+  .cv-meta { color: var(--muted); font-variant-numeric: tabular-nums; }
+  .cv-notes { white-space: pre-line; overflow-wrap: anywhere; font-size: 14px; margin-top: 12px; border-top: 1px solid var(--line); padding-top: 10px; }
+  .cv-card .actions { margin-top: 14px; }
+  .cv-notes a, .entry .text a, .e-links a { color: var(--accent); overflow-wrap: anywhere; }
+  .e-links { font-size: 13px; display: grid; gap: 2px; text-transform: none; letter-spacing: 0; }
+  .e-links b { font-size: 12px; color: var(--muted); font-weight: 400; text-transform: uppercase; letter-spacing: .06em; }
+
+  dialog {
+    border: 1px solid var(--line); border-radius: 12px; background: var(--paper); color: var(--ink);
+    width: min(480px, calc(100vw - 32px)); padding: 22px; box-shadow: 0 10px 40px rgba(0,0,0,.25);
+  }
+  dialog::backdrop { background: rgba(15, 25, 25, .5); }
+  dialog h2 { font-family: var(--font-display); font-size: 24px; margin: 0 0 2px; line-height: 1.15; }
+  dialog .sub { color: var(--muted); font-size: 13px; margin-bottom: 14px; }
+  .fields { display: grid; gap: 12px; }
+  .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  label { display: grid; gap: 4px; font-size: 12px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); }
+  input, textarea, select {
+    font: inherit; font-size: 15px; text-transform: none; letter-spacing: 0; color: var(--ink);
+    background: var(--bg); border: 1px solid var(--line); border-radius: 6px; padding: 7px 9px; width: 100%; min-width: 0;
+  }
+  textarea { min-height: 96px; resize: vertical; }
+  input:focus, textarea:focus, select:focus { outline: 2px solid var(--accent); outline-offset: 0; border-color: transparent; }
+  .actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 18px; align-items: center; }
+  .actions .spacer { flex: 1; }
+  button.btn {
+    font: inherit; padding: 7px 16px; border-radius: 6px; cursor: pointer;
+    border: 1px solid var(--line); background: transparent; color: var(--ink);
+  }
+  button.btn.primary { background: var(--accent); border-color: var(--accent); color: var(--paper); font-weight: 700; }
+  button.btn.danger { color: var(--female); border-color: var(--female); }
+  button.btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  button.btn:disabled { opacity: .5; cursor: default; }
+  .form-error { color: var(--female); font-size: 13px; margin-top: 10px; }
+
+  main.info { max-width: var(--page); margin: 0 auto; padding-block: 8px 64px; display: grid; gap: 20px; align-items: start; }
+  @media (min-width: 1000px) {
+    main.info { grid-template-columns: minmax(0, 1.7fr) minmax(300px, 1fr); }
+    main.info > .panel:first-child { grid-row: span 3; }
+  }
+  .entry .text { max-width: 75ch; }
+  .panel { background: var(--paper); border: 1px solid var(--line); border-radius: 10px; padding: 20px 22px; min-width: 0; }
+  .panel h3 { font-family: var(--font-display); font-size: 23px; margin: 0 0 8px; }
+  .panel ul { margin: 0; padding-left: 20px; }
+  .panel li { margin: 4px 0; }
+  .panel a { color: var(--accent); }
+  .journal { display: grid; gap: 12px; margin-top: 4px; }
+  .journal-bar { display: flex; align-items: center; gap: 8px; margin-top: 18px; padding-top: 12px; border-top: 1px solid var(--line); }
+  .journal-bar h4 { font-family: var(--font-display); font-size: 19px; margin: 0; }
+  .journal-bar .j-count { font-size: 12.5px; color: var(--muted); font-variant-numeric: tabular-nums; }
+  .journal-bar .j-nav { display: inline-flex; gap: 2px; }
+  .journal-bar .j-nav[hidden], .journal-bar .chip-btn[hidden] { display: none; }
+  .journal-bar .icon-btn { border: 1px solid var(--line); }
+  .entry { border-top: 1px solid var(--line); padding-top: 10px; }
+  .entry .who { font-size: 12px; color: var(--muted); }
+  .entry .who b { color: var(--accent); }
+  .entry .text { white-space: pre-line; overflow-wrap: anywhere; }
+  .journal-form { display: grid; gap: 8px; margin-top: 8px; }
+  .journal-form textarea { min-height: 70px; }
+  .journal-form .btn { justify-self: start; }
+
+  .requests { margin-top: 18px; display: grid; gap: 8px; }
+  .requests h4 { font-family: var(--font-display); font-size: 19px; margin: 0; }
+  .requests .hint { font-size: 13px; color: var(--muted); margin: 0 0 4px; }
+  .req { border: 1px solid var(--line); border-radius: 8px; background: var(--bg); min-width: 0; }
+  .req summary {
+    display: flex; gap: 10px; align-items: center; padding: 10px 12px; cursor: pointer; list-style: none;
+  }
+  .req summary::-webkit-details-marker { display: none; }
+  .req summary::before { content: "▸"; color: var(--muted); transition: transform .15s; }
+  .req[open] summary::before { transform: rotate(90deg); }
+  .req summary:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+  .req-title { flex: 1; font-weight: 700; min-width: 0; overflow-wrap: anywhere; }
+  .pill { font-size: 11px; padding: 2px 8px; border-radius: 10px; border: 1px solid var(--line); color: var(--muted); white-space: nowrap; }
+  .pill.sent { color: var(--accent); border-color: var(--accent); }
+  .pill.done { background: var(--accent); color: var(--paper); border-color: var(--accent); }
+  .req-body { padding: 0 12px 12px; display: grid; gap: 10px; min-width: 0; }
+  .req-meta { display: grid; gap: 6px; font-size: 14px; }
+  .req-meta .k { font-size: 11px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); }
+  .req-meta .v { white-space: pre-line; overflow-wrap: anywhere; }
+  .req textarea { min-height: 320px; font-size: 14px; line-height: 1.45; background: var(--paper); }
+  .req .actions { margin-top: 0; }
+  .req select { width: auto; font-size: 13px; padding: 5px 8px; }
+  .req-note { font-size: 12px; color: var(--muted); min-height: 16px; }
+
+  /* Вопросы к семье: значок на карточке и окно с ответами */
+  /* Значок вопроса: аккуратный кружок «?» в левом верхнем углу */
+  .ask-btn {
+    position: absolute; top: -8px; left: -8px; z-index: 1; width: 20px; height: 20px; padding: 0;
+    display: grid; place-items: center; border-radius: 50%;
+    border: 2px solid var(--bg); background: var(--ask); color: var(--paper);
+    font: 700 12px/1 var(--font-display); cursor: pointer;
+  }
+  .ask-btn:hover { filter: brightness(1.1); }
+  .ask-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .nav-btn { position: relative; }
+  .nav-btn .ask-dot {
+    position: absolute; top: 7px; right: 8px; width: 18px; height: 18px; border-radius: 50%;
+    display: grid; place-items: center; background: var(--ask); color: var(--paper);
+    font: 700 11px/1 var(--font-display);
+  }
+
+  /* Временная линия */
+  .time-view { margin: 12px auto 32px; }
+  .time-view .tl-note { margin-bottom: 6px; min-height: 16px; }
+  .tl-note { font-size: 12px; color: var(--muted); }
+  .tl-scroll {
+    overflow: auto; max-height: calc(100vh - var(--bar-h) - 48px); background: var(--paper);
+    border: 1px solid var(--line); border-radius: 8px; -webkit-overflow-scrolling: touch;
+  }
+  .tl-canvas { position: relative; }
+  .tl-head { background: var(--paper); border-bottom: 1px solid var(--line); }
+  .tl-yr { font-size: 10.5px; color: var(--muted); opacity: .8; transform: translateX(3px); position: sticky; }
+  .tl-body { position: relative; }
+  .tl-head > *, .tl-body > * { position: absolute; }
+  .tl-tick { font-size: 11px; color: var(--muted); font-variant-numeric: tabular-nums; transform: translateX(-50%); white-space: nowrap; }
+  .tl-grid { top: 0; bottom: 0; width: 0; border-left: 1px solid var(--line); opacity: .35; }
+  .tl-grid.century { opacity: .8; }
+  .tl-band { top: 0; bottom: 0; background: var(--evc); opacity: .07; }
+  .tl-pbar {
+    height: 7px; padding: 0; border: 0; border-radius: 4px; background: var(--evc); cursor: pointer;
+    opacity: .85; transition: opacity .15s, transform .15s var(--ease-out); transform-origin: center;
+  }
+  .tl-pbar:hover { opacity: 1; transform: scaleY(1.45); }
+  .tl-pbar.focus { opacity: 1; transform: scaleY(1.45); }
+  .tl-dot {
+    width: 14px; height: 14px; padding: 0; border-radius: 50%; cursor: pointer;
+    border: 3px solid var(--paper); background: var(--evc); box-shadow: 0 0 0 1px var(--evc);
+    transition: transform .15s var(--ease-out);
+  }
+  .tl-dot:hover, .tl-dot.focus { transform: scale(1.3); }
+  .tl-ev-text {
+    height: 15px; padding: 0 2px; border: 0; background: transparent; cursor: pointer; white-space: nowrap;
+    font: inherit; font-size: 11.5px; line-height: 15px; color: var(--ink); text-align: left; border-radius: 3px;
+  }
+  .tl-ev-text b { color: var(--evc); font-weight: 700; font-variant-numeric: tabular-nums; margin-right: 2px; }
+  .tl-ev-text:hover { text-decoration: underline; text-decoration-color: var(--evc); text-underline-offset: 2px; }
+  .tl-pbar:focus-visible, .tl-dot:focus-visible, .tl-ev-text:focus-visible, .tl-bar:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .tl-band.focus {
+    opacity: 1; background: color-mix(in srgb, var(--evc) 20%, transparent);
+    box-shadow: inset 2px 0 0 var(--evc), inset -2px 0 0 var(--evc); animation: fade .35s var(--ease-out);
+  }
+  .tl-line.focus { opacity: 1; border-left: 2px solid var(--evc); animation: fade .35s var(--ease-out); }
+  .tl-body.has-focus .tl-band:not(.focus), .tl-body.has-focus .tl-line:not(.focus) { opacity: .03; }
+  .ev-pop {
+    position: fixed; z-index: 25; background: var(--paper); border: 1px solid var(--line); border-top: 3px solid var(--evc);
+    border-radius: 8px; padding: 12px 14px 12px; box-shadow: 0 10px 30px rgba(20, 35, 35, .18);
+    max-height: min(60vh, 460px); overflow-y: auto;
+  }
+  .ev-pop.show { animation: swap .18s var(--ease-out); }
+  .ev-pop .ev-sub { font-size: 12px; color: var(--evc); font-weight: 700; }
+  .ev-pop .ev-h { font-family: var(--font-display); font-weight: 700; font-size: 19px; line-height: 1.2; margin: 2px 0 6px; }
+  .ev-pop .ev-text { font-size: 13.5px; line-height: 1.5; white-space: pre-line; overflow-wrap: anywhere; }
+  .ev-pop .ev-text a { color: var(--accent); }
+  .ev-pop .ev-show { margin-top: 10px; font-size: 13px; padding: 4px 12px; }
+  .tl-line { top: 0; bottom: 0; width: 0; border-left: 1px dashed var(--evc); opacity: .45; }
+  .tl-bar {
+    height: 18px; font: inherit; font-size: 12px; line-height: 16px; padding: 0 6px; color: var(--ink); text-align: left;
+    background: color-mix(in srgb, var(--sexc, var(--accent)) 13%, var(--paper));
+    border: 1px solid color-mix(in srgb, var(--sexc, var(--accent)) 45%, transparent); border-radius: 3px;
+    white-space: nowrap; overflow: visible; cursor: pointer; transform-origin: left center;
+  }
+  .tl-bar.m { --sexc: var(--male); }
+  .tl-bar.f { --sexc: var(--female); }
+  .tl-bar.open-end { border-right-style: dashed; background: linear-gradient(90deg, color-mix(in srgb, var(--sexc, var(--accent)) 13%, var(--paper)) 65%, transparent); }
+  .tl-bar.is-sib { opacity: .72; }
+  .tl-bar .yrs { color: var(--muted); font-variant-numeric: tabular-nums; margin-left: 6px; }
+  .tl-bar:hover { border-color: var(--accent); }
+  .ev-world { --evc: var(--ev-world); }
+  .ev-country { --evc: var(--ev-country); }
+  .ev-region { --evc: var(--ev-region); }
+  .ev-place { --evc: var(--ev-place); }
+  /* Справка о человеке: боковая панель, не перекрывает работу с древом */
+  .drawer {
+    position: fixed; top: var(--bar-h); right: 0; bottom: 0; z-index: 20; width: min(460px, 100vw);
+    background: var(--paper); border-left: 1px solid var(--line);
+    box-shadow: -12px 0 32px rgba(20, 35, 35, .14);
+    display: flex; flex-direction: column;
+    transform: translateX(104%); visibility: hidden;
+    transition: transform .32s var(--ease-out), visibility 0s linear .32s;
+  }
+  .drawer.open { transform: none; visibility: visible; transition: transform .32s var(--ease-out); }
+  .drawer-top { display: flex; align-items: center; gap: 8px; padding: 12px 14px 10px 20px; border-bottom: 1px solid var(--line); }
+  .drawer-top .crumb { flex: 1; min-width: 0; font-size: 12px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .icon-btn {
+    width: 32px; height: 32px; display: grid; place-items: center; border-radius: 6px; flex: none;
+    border: 1px solid transparent; background: transparent; color: var(--muted); cursor: pointer;
+  }
+  .icon-btn:hover { background: var(--bg); color: var(--ink); }
+  .icon-btn:disabled { opacity: .35; cursor: default; background: transparent; }
+  .icon-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+  .icon-btn svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+  .drawer-body { flex: 1; overflow-y: auto; padding: 18px 20px 28px; overscroll-behavior: contain; }
+  .drawer-body.swap, .drawer-edit.swap { animation: swap .22s var(--ease-out); }
+  .drawer-edit { flex: 1; overflow-y: auto; padding: 18px 20px 28px; overscroll-behavior: contain; }
+  .drawer-edit[hidden], .drawer-body[hidden] { display: none; }
+  .drawer-edit h2 { font-family: var(--font-display); font-size: 24px; margin: 0 0 2px; line-height: 1.15; }
+  .drawer-edit .sub { color: var(--muted); font-size: 13px; margin-bottom: 14px; }
+  .drawer-edit .actions { position: sticky; bottom: -28px; background: var(--paper); padding-block: 12px; margin-bottom: -12px; border-top: 1px solid var(--line); }
+  .d-head { display: grid; grid-template-columns: 1fr auto; gap: 14px; align-items: start; }
+  .d-head .photo { width: 92px; height: 92px; border-radius: 6px; }
+  .d-role { font-size: 12px; color: var(--muted); }
+  .d-name { font-family: var(--font-display); font-size: 26px; line-height: 1.12; margin: 2px 0 6px; overflow-wrap: anywhere; text-wrap: balance; }
+  .d-meta { color: var(--ink); font-variant-numeric: tabular-nums; }
+  .d-meta span { color: var(--muted); }
+  .d-sec { margin-top: 22px; }
+  .d-sec h3 { font-family: var(--font-body); font-size: 12px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); margin: 0 0 8px; display: flex; gap: 8px; align-items: baseline; }
+  .d-sec h3 .n { font-weight: 400; letter-spacing: 0; }
+  .d-sec.asks h3 { color: var(--ask); }
+  .d-notes { white-space: pre-line; overflow-wrap: anywhere; font-size: 14.5px; line-height: 1.55; }
+  .d-notes a, .d-log a, .d-ask a { color: var(--accent); text-underline-offset: 2px; }
+  .d-rel { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+  .d-rel .wide { grid-column: 1 / -1; }
+  .rel-btn {
+    font: inherit; font-size: 13.5px; text-align: left; cursor: pointer; min-width: 0; padding: 6px 10px;
+    background: var(--bg); color: var(--ink); border: 1px solid var(--line); border-radius: 6px;
+    display: grid; gap: 1px; transition: border-color .15s, background .15s;
+  }
+  .rel-btn:hover { border-color: var(--accent); background: var(--paper); }
+  .rel-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+  .rel-btn .k { font-size: 11px; color: var(--muted); }
+  .rel-btn .v { overflow-wrap: anywhere; }
+  .rel-btn.m .k::before, .rel-btn.f .k::before { content: ""; display: inline-block; width: 6px; height: 6px; border-radius: 50%; margin-right: 5px; vertical-align: 1px; }
+  .rel-btn.m .k::before { background: var(--male); }
+  .rel-btn.f .k::before { background: var(--female); }
+  .rel-btn.unknown { border-style: dashed; color: var(--muted); background: transparent; }
+  .d-ask { border: 1px solid color-mix(in srgb, var(--ask) 40%, var(--line)); border-radius: 8px; padding: 10px 12px; display: grid; gap: 8px; background: color-mix(in srgb, var(--ask) 6%, var(--paper)); }
+  .d-ask + .d-ask { margin-top: 8px; }
+  .d-ask .q { white-space: pre-line; overflow-wrap: anywhere; font-size: 14px; }
+  .d-ask .who { font-size: 12px; color: var(--muted); }
+  .d-ask textarea { min-height: 60px; font-size: 14px; background: var(--paper); }
+  .d-ask .row { display: flex; gap: 8px; align-items: center; }
+  .d-ask .row .btn { padding: 5px 12px; font-size: 13px; }
+  .d-ask .ans { border-top: 1px dashed var(--line); padding-top: 6px; font-size: 13.5px; white-space: pre-line; overflow-wrap: anywhere; }
+  .d-log { display: grid; gap: 12px; }
+  .d-log .entry { font-size: 13.5px; }
+  .d-log details summary { cursor: pointer; color: var(--accent); font-size: 13px; }
+  .d-empty { font-size: 13.5px; color: var(--muted); }
+  /* Правка по клику: поле выглядит как в просмотре, но откликается на наведение */
+  .editable .ed-field { position: relative; border-radius: 4px; cursor: text; transition: background .15s, box-shadow .15s; }
+  .editable .ed-field:hover { background: color-mix(in srgb, var(--accent) 7%, transparent); box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 7%, transparent); }
+  .editable .ed-field:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+  .editable .ed-field.is-empty { color: var(--muted); font-style: italic; font-weight: 400; }
+  .editable .d-name.is-empty { font-size: 20px; }
+  .ed-field .inline-input { font: inherit; color: var(--ink); width: 100%; padding: 2px 6px; margin: -3px -7px; width: calc(100% + 14px); background: var(--paper); border: 1px solid var(--accent); border-radius: 4px; }
+  .d-name .inline-input { font-size: 19px; line-height: 1.3; }
+  .ed-years:has(.inline-input) { display: flex; gap: 10px; width: 100%; padding: 2px 0; }
+  .ed-years .yr { display: grid; gap: 2px; flex: 1; min-width: 0; font-size: 11px; color: var(--muted); text-transform: none; letter-spacing: 0; }
+  .ed-meta .ed-years .yr .inline-input { margin: 0; width: 100%; font-size: 14px; }
+  .ed-meta .ed-field .inline-input { width: 16em; margin: -3px 0; }
+  .ed-field textarea.inline-input { min-height: 120px; resize: vertical; line-height: 1.55; font-size: 14.5px; }
+  .ed-field .inline-input:focus { outline: 2px solid color-mix(in srgb, var(--accent) 35%, transparent); outline-offset: 0; }
+  .d-maiden, .d-place { font-size: 14px; color: var(--muted); margin-top: 2px; }
+  .ed-meta { display: flex; flex-wrap: wrap; gap: 2px 4px; align-items: baseline; }
+  .ed-tip { margin-top: 12px; font-size: 12px; color: var(--muted); padding: 7px 10px; border-radius: 6px; background: var(--bg); }
+  .ed-flash { position: absolute; right: 0; top: -18px; font-size: 11px; font-weight: 700; font-style: normal; color: var(--accent); background: var(--paper); padding: 1px 6px; border-radius: 8px; box-shadow: var(--shadow); animation: swap .2s var(--ease-out); pointer-events: none; }
+  .ed-flash.bad { color: var(--female); }
+  .ed-photo { position: relative; width: 92px; display: grid; gap: 4px; justify-items: center; }
+  .editable .ed-photo { cursor: pointer; }
+  .ed-photo .photo { width: 92px; height: 92px; border-radius: 6px; transition: filter .15s; }
+  .editable .ed-photo:hover .photo { filter: brightness(.9); }
+  .ed-photo-empty { width: 92px; height: 92px; border-radius: 6px; border: 1.5px dashed var(--unknown-border); display: grid; place-items: center; font-size: 12.5px; color: var(--muted); }
+  .ed-photo.busy { opacity: .5; }
+  .ed-photo-del { font: inherit; font-size: 11.5px; color: var(--muted); background: none; border: 0; cursor: pointer; text-decoration: underline; text-underline-offset: 2px; }
+  .d-delete { margin-top: 26px; font-size: 13px; }
+  @media (min-width: 1100px) {
+    body.with-drawer .tree-wrap, body.with-drawer .time-view { margin-right: 470px; }
+  }
+
+  /* Быстрый просмотр при наведении */
+  .peek {
+    position: fixed; z-index: 15; width: 340px; max-width: calc(100vw - 24px); pointer-events: none;
+    background: var(--paper); border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px;
+    box-shadow: 0 10px 30px rgba(20, 35, 35, .18);
+    opacity: 0; transform: translateY(6px) scale(.98); transform-origin: top left;
+    transition: opacity .14s ease, transform .18s var(--ease-out);
+  }
+  .peek.show { opacity: 1; transform: none; }
+  .peek .d-head .photo { width: 64px; height: 64px; }
+  .peek .d-name { font-size: 20px; }
+  .peek .p-notes { margin-top: 10px; font-size: 13px; line-height: 1.45; white-space: pre-line; overflow-wrap: anywhere; display: -webkit-box; -webkit-line-clamp: 9; -webkit-box-orient: vertical; overflow: hidden; }
+  .peek .p-facts { margin-top: 10px; display: flex; flex-wrap: wrap; gap: 6px; }
+  .peek .p-fact { font-size: 12px; padding: 2px 8px; border-radius: 10px; background: var(--bg); color: var(--muted); }
+  .peek .p-fact.ask { background: color-mix(in srgb, var(--ask) 14%, var(--paper)); color: var(--ask); font-weight: 700; }
+  .peek .p-hint { margin-top: 10px; font-size: 11.5px; color: var(--muted); }
+
+  /* Выбранный человек в древе */
+  .card.selected { outline: 2px solid var(--accent); outline-offset: 3px; }
+  .card.pulse { animation: pulse 1s var(--ease-out); }
+  .open-asks { display: grid; gap: 6px; margin-top: 10px; }
+  .ask-item-btn .k { color: var(--ask); font-weight: 700; }
+  .ask-item-btn .v { font-size: 13.5px; }
+  .tl-bar.selected { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+  /* Анимация */
+  @keyframes pulse {
+    0% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--accent) 55%, transparent), var(--shadow); }
+    100% { box-shadow: 0 0 0 14px transparent, var(--shadow); }
+  }
+  @keyframes swap { from { opacity: 0; transform: translateY(6px); } }
+  @keyframes cv-up { from { opacity: 0; transform: translateY(-14px); } }
+  @keyframes cv-down { from { opacity: 0; transform: translateY(14px); } }
+  .cv-card.from-up { animation: cv-up .3s var(--ease-out); }
+  .cv-card.from-down { animation: cv-down .3s var(--ease-out); }
+  dialog[open] { animation: swap .2s var(--ease-out); }
+  ::selection { background: color-mix(in srgb, var(--accent) 28%, transparent); }
+  @media (prefers-reduced-motion: reduce) {
+    .drawer, .drawer.open { transition: visibility 0s, opacity .15s; }
+    .drawer-body.swap, .cv-card.from-up, .cv-card.from-down, dialog[open] { animation: fade .15s; }
+    .card.pulse { animation: none; }
+    .peek { transform: none; }
+  }
+  @keyframes fade { from { opacity: 0; } }
+  .cv-asks { margin-top: 14px; border-top: 1px solid var(--line); padding-top: 10px; display: grid; gap: 8px; }
+  .cv-asks .k { font-size: 11px; text-transform: uppercase; letter-spacing: .06em; color: var(--ask); font-weight: 700; }
+  .cv-ask { display: grid; gap: 4px; font-size: 14px; }
+  .cv-ask .q { white-space: pre-line; overflow-wrap: anywhere; }
+  .cv-ask .who { font-size: 12px; color: var(--muted); }
+  .cv-ask .btn { justify-self: start; font-size: 13px; padding: 4px 12px; }
+  #asks-dialog { width: min(560px, calc(100vw - 32px)); }
+  .ask-list { display: grid; gap: 14px; max-height: 60vh; overflow-y: auto; margin: 4px -4px 0; padding: 0 4px; }
+  .ask-item { border: 1px solid var(--line); border-left: 3px solid var(--ask); border-radius: 6px; padding: 10px 12px; background: var(--bg); display: grid; gap: 8px; min-width: 0; }
+  .ask-item.done { border-left-color: var(--line); }
+  .ask-item .q { white-space: pre-line; overflow-wrap: anywhere; }
+  .ask-item .q a, .ask-ans a { color: var(--accent); overflow-wrap: anywhere; }
+  .ask-item .meta { font-size: 12px; color: var(--muted); }
+  .ask-ans { border-top: 1px dashed var(--line); padding-top: 6px; font-size: 14px; white-space: pre-line; overflow-wrap: anywhere; }
+  .ask-ans .who { font-size: 12px; color: var(--muted); }
+  .ask-ans .who b { color: var(--accent); }
+  .ask-item textarea { min-height: 70px; background: var(--paper); }
+  .ask-item .actions { margin-top: 0; }
+  .e-asks-btn { margin-top: 14px; color: var(--ask); border-color: var(--ask); }
+  .e-journal { margin-top: 14px; border: 1px solid var(--line); border-radius: 8px; background: var(--bg); min-width: 0; }
+  .e-journal summary { padding: 9px 12px; cursor: pointer; font-weight: 700; list-style: none; display: flex; gap: 8px; align-items: center; }
+  .e-journal summary::-webkit-details-marker { display: none; }
+  .e-journal summary::before { content: "▸"; color: var(--muted); transition: transform .15s; }
+  .e-journal[open] summary::before { transform: rotate(90deg); }
+  .e-journal summary:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+  .e-journal-list { display: grid; gap: 10px; padding: 0 12px 12px; max-height: 45vh; overflow-y: auto; }
+  .e-journal-list .entry { font-size: 14px; }
+</style>
+
+<style>
+  body.locked > :not(#gate):not(script):not(style):not(dialog) { display: none !important; }
+  #gate { position: fixed; inset: 0; z-index: 1000; display: grid; place-items: center; background: var(--bg); padding: 16px; }
+  body:not(.locked) #gate { display: none; }
+  #gate .gate-box { max-width: 420px; text-align: center; display: grid; gap: 14px; justify-items: center; }
+  #gate h1 { font-family: var(--font-display); font-size: 30px; margin: 0; }
+  #gate p { margin: 0; color: var(--muted); }
+  #gate .gate-btns { display: flex; gap: 10px; }
+</style>
+<div id="gate"><div class="gate-box">
+  <h1>Родословная Чайкиных</h1>
+  <p id="gate-text">Страница доступна только членам семьи. Войдите по ссылке, которая придёт на ваш email.</p>
+  <div class="gate-btns">
+    <button class="btn primary" type="button" id="gate-login">Войти</button>
+    <button class="btn" type="button" id="gate-logout" hidden>Выйти</button>
+  </div>
+</div></div>
+<script>document.body.classList.add("locked");</script>
+<script>
+// Данные древа приходят из Firestore после входа (см. comments.js):
+// до этого все подписки ждут window.__treeReady.
+window.__treeReady = new Promise(res => { window.__resolveTree = res; });
+window.__TREE_PHOTOS__ = {};
+function makeStaticDb(ready) {
+  const ro = () => Promise.reject(new Error("read-only"));
+  const query = (name, field, dir) => ({
+    orderBy: (f, d) => query(name, f, d),
+    onSnapshot(ok) {
+      ready.then(all => {
+      let rows = Object.entries(all[name] || {});
+      if (field) rows.sort((a, b) => {
+        const x = a[1][field], y = b[1][field];
+        const r = x < y ? -1 : x > y ? 1 : 0;
+        return dir === "desc" ? -r : r;
+      });
+      ok({ docs: rows.map(([id, d]) => ({ id, data: () => d })) });
+      });
+      return () => {};
+    },
+    add: ro,
+    doc: () => ({ set: ro, update: ro, delete: ro, id: "" }),
+  });
+  return {
+    collection: name => query(name),
+    doc: () => ({ set: ro, update: ro, delete: ro }),
+  };
+}
+</script>
+<nav class="menubar" aria-label="Управление древом">
+  <span class="mb-title">Родословная Александра Чайкина</span>
+  <div class="seg" id="mode-seg" aria-label="Вид">
+    <button type="button" data-mode="tree">Древо</button>
+    <button type="button" data-mode="card">По одному</button>
+    <button type="button" data-mode="time">Время</button>
+  </div>
+  <div class="seg" id="edit-seg" aria-label="Режим работы">
+    <button type="button" data-edit="0">Просмотр</button>
+    <button type="button" data-edit="1">Правка</button>
+  </div>
+  <div class="seg icons" id="dir-seg" aria-label="Направление древа">
+    <button type="button" data-dir="td" title="Сверху вниз" aria-label="Сверху вниз"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 2v11M3.5 8.5 8 13l4.5-4.5"/></svg></button>
+    <button type="button" data-dir="lr" title="Слева направо" aria-label="Слева направо"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2 8h11M8.5 3.5 13 8l-4.5 4.5"/></svg></button>
+    <button type="button" data-dir="bu" title="Снизу вверх" aria-label="Снизу вверх"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 14V3M3.5 7.5 8 3l4.5 4.5"/></svg></button>
+  </div>
+  <div class="mb-group">
+    <label class="chip" id="sibs-wrap" title="Показывать братьев и сестёр"><input type="checkbox" id="opt-sibs">Братья и сёстры</label>
+    <label class="chip" id="empty-wrap" title="Показывать пустые места для новых предков"><input type="checkbox" id="opt-empty">Пустые места</label>
+  </div>
+  <div class="mb-group" id="tl-scopes" aria-label="События на временной линии">
+    <label class="chip"><input type="checkbox" data-scope="world"><i class="sw ev-world"></i>Мир</label>
+    <label class="chip"><input type="checkbox" data-scope="country"><i class="sw ev-country"></i>Россия / СССР</label>
+    <label class="chip"><input type="checkbox" data-scope="region"><i class="sw ev-region"></i>Регион</label>
+    <label class="chip"><input type="checkbox" data-scope="place"><i class="sw ev-place"></i>Сёла и города</label>
+    <button class="chip-btn" type="button" id="tl-collapse" aria-controls="tl-scroll"></button>
+  </div>
+  <span class="mb-spacer"></span>
+  <span class="status" id="status" aria-live="polite">Загружаю древо…</span>
+  <button class="icon-btn ivy-btn" type="button" id="ivy-btn" aria-pressed="false" title="Вырастить плющ по древу" aria-label="Вырастить плющ по древу"><svg viewBox="0 0 16 16"><path d="M8 14.5C8 10 6.5 6.5 3 4.5"/><path d="M8 9.5c1.6-2.8 3.8-4.2 6-4.4-.3 3-2.4 5-6 4.4z" class="fill"/><path d="M5.2 6.6C3 7 1.6 6 1.2 3.8c2.1-.4 3.6.6 4 2.8z" class="fill"/></svg></button>
+  <button class="icon-btn help-btn" type="button" id="help-btn" aria-haspopup="dialog" aria-expanded="false" aria-controls="help-pop" title="Как пользоваться">?</button>
+</nav>
+<div class="help-pop" id="help-pop" role="dialog" aria-label="Как пользоваться" hidden>
+  <p class="help-hint" id="hint"></p>
+  <div class="legend">
+    <span><i class="m"></i>Мужчина</span>
+    <span><i class="f"></i>Женщина</span>
+    <span><i class="u"></i>Пока неизвестно</span>
+    <span><i class="a">?</i>Нужна информация от семьи</span>
+  </div>
+  <dl class="help-list">
+    <dt>Древо</dt><dd>Наведите на карточку — краткая справка; нажмите — полная, с источниками, журналом поиска и вопросами. Значок «+N» раскрывает братьев и сестёр.</dd>
+    <dt>По одному</dt><dd>Один человек на экране, переходы к родителям и детям, мини-схема всего древа. Удобно на телефоне.</dd>
+    <dt>Время</dt><dd>Жизни людей на фоне истории. Подпись события — пояснение; точка или полоска — выделить событие на линии.</dd>
+    <dt>Просмотр / Правка</dt><dd>В просмотре клик открывает справку, в правке — форму: исправить данные или добавить человека.</dd>
+  </dl>
+  <p class="help-foot">Esc закрывает справку о человеке.</p>
+</div>
+
+<div class="tree-wrap" id="tree-wrap"><div class="tree" id="tree"></div></div>
+
+<section class="card-view" id="card-view" hidden>
+  <div class="minimap">
+    <svg id="minimap" preserveAspectRatio="xMidYMid meet" aria-label="Схема всего древа"></svg>
+    <div class="minimap-hint">Нажмите на точку, чтобы перейти к человеку</div>
+  </div>
+  <div class="cv-label">↑ Родители</div>
+  <div class="cv-row" id="cv-parents"></div>
+  <article class="cv-card" id="cv-card"></article>
+  <div id="cv-child"></div>
+</section>
+
+<section class="time-view" id="time-view" hidden>
+  <div class="tl-note" id="tl-note"></div>
+  <div class="tl-scroll" id="tl-scroll"></div>
+</section>
+
+<aside class="drawer" id="drawer" aria-label="Справка о человеке" aria-hidden="true">
+  <div class="drawer-top">
+    <button class="icon-btn" type="button" id="d-back" title="Назад" aria-label="Назад"><svg viewBox="0 0 16 16"><path d="M10 3 5 8l5 5"/></svg></button>
+    <div class="crumb" id="d-crumb"></div>
+    <button class="btn" type="button" id="d-edit">Изменить</button>
+    <button class="icon-btn" type="button" id="d-close" title="Закрыть (Esc)" aria-label="Закрыть"><svg viewBox="0 0 16 16"><path d="M4 4l8 8M12 4l-8 8"/></svg></button>
+  </div>
+  <div class="drawer-body" id="d-body"></div>
+  <div class="drawer-edit" id="editor" hidden>
+  <form id="person-form" method="dialog">
+    <h2 id="e-title"></h2>
+    <div class="sub" id="e-sub"></div>
+    <div class="fields">
+      <label>Фамилия, имя, отчество
+        <input id="f-name" autocomplete="off" placeholder="Например: Иван Петрович Чайкин">
+      </label>
+      <label id="sex-wrap" hidden>Кто это
+        <select id="f-sex"><option value="m">Брат</option><option value="f">Сестра</option></select>
+      </label>
+      <label id="maiden-wrap">Девичья фамилия
+        <input id="f-maiden" autocomplete="off">
+      </label>
+      <div class="row2">
+        <label>Год рождения <input id="f-born" autocomplete="off" placeholder="1931 или ~1930"></label>
+        <label>Год смерти <input id="f-died" autocomplete="off"></label>
+      </div>
+      <label>Место рождения <input id="f-place" autocomplete="off" placeholder="село, район"></label>
+      <label>Заметки, воспоминания, документы
+        <textarea id="f-notes" placeholder="Где жил, кем работал, воевал ли, откуда эти сведения"></textarea>
+      </label>
+      <div class="e-links" id="e-links" hidden></div>
+      <label id="photo-wrap" hidden>Фото
+        <span class="e-photo">
+          <span id="e-photo-box"></span>
+          <input type="file" id="f-photo" accept="image/jpeg,image/png,image/webp,image/gif">
+          <button class="btn" type="button" id="e-photo-del" hidden>Убрать</button>
+        </span>
+      </label>
+    </div>
+    <button class="btn e-asks-btn" type="button" id="e-asks" hidden></button>
+    <details class="e-journal" id="e-journal" hidden>
+      <summary id="e-journal-sum"></summary>
+      <div class="e-journal-list" id="e-journal-list"></div>
+    </details>
+    <div class="form-error" id="e-error" hidden></div>
+    <div class="actions">
+      <button class="btn primary" id="e-save" type="submit">Сохранить</button>
+      <button class="btn" id="e-cancel" type="button">Отмена</button>
+      <span class="spacer"></span>
+      <button class="btn danger" id="e-delete" type="button" hidden>Удалить</button>
+    </div>
+  </form>
+</div>
+</aside>
+<div class="peek" id="peek" aria-hidden="true"></div>
+
+<div class="ev-pop" id="ev-pop" role="dialog" aria-label="Пояснение к событию" hidden></div>
+
+
+
+<dialog id="asks-dialog">
+  <h2 id="a-title"></h2>
+  <div class="sub">Что нужно узнать для дальнейшего поиска. Впишите всё, что помните или узнали у родных, — Claude прочитает и продолжит.</div>
+  <div class="ask-list" id="a-list"></div>
+  <div class="actions">
+    <span class="spacer"></span>
+    <button class="btn" id="a-close" type="button">Закрыть</button>
+  </div>
+</dialog>
+
+<main class="info">
+  <section class="panel">
+    <h3>Журнал поиска</h3>
+    <p>Сюда попадают находки Claude и всё, что рассказали родственники. Claude читает эти записи и продолжает поиск с них.</p>
+    <form class="journal-form" id="journal-form">
+      <label for="j-text">Новая запись</label>
+      <textarea id="j-text" placeholder="Например: папа говорит, что дед родом из-под Рязани"></textarea>
+      <button class="btn primary" type="submit">Добавить запись</button>
+    </form>
+    <div class="requests">
+      <h4>Запросы в архивы</h4>
+      <p class="hint">Готовые письма. Откройте письмо, впишите данные заявителя в квадратных скобках, нажмите «Сохранить», затем «Скопировать письмо» и отправьте по указанному адресу. Статус помогает не потерять, что уже ушло.</p>
+      <div id="requests"><div class="req-note">Загружаю письма…</div></div>
+    </div>
+    <div class="journal-bar" id="journal-bar">
+      <h4>Записи журнала</h4>
+      <span class="j-count" id="j-count"></span>
+      <span class="mb-spacer"></span>
+      <div class="j-nav" id="j-nav">
+        <button class="icon-btn" type="button" id="j-prev" title="Более новая запись" aria-label="Более новая запись"><svg viewBox="0 0 16 16"><path d="M10 3 5 8l5 5"/></svg></button>
+        <button class="icon-btn" type="button" id="j-next" title="Более старая запись" aria-label="Более старая запись"><svg viewBox="0 0 16 16"><path d="M6 3l5 5-5 5"/></svg></button>
+      </div>
+      <button class="chip-btn" type="button" id="j-toggle" aria-controls="journal"></button>
+    </div>
+    <div class="journal" id="journal"></div>
+  </section>
+
+  <section class="panel">
+    <h3>Открытые вопросы к семье</h3>
+    <p class="tl-note">Что нужно узнать у родственников, чтобы продолжить поиск. Нажмите на вопрос — откроется справка о человеке с полем для ответа.</p>
+    <div class="open-asks" id="open-asks"><div class="d-empty">Загружаю вопросы…</div></div>
+  </section>
+
+  <section class="panel">
+    <h3>Где искать</h3>
+    <ul>
+      <li><a href="https://pamyat-naroda.ru/" target="_blank" rel="noopener">Память народа</a>, <a href="https://obd-memorial.ru/" target="_blank" rel="noopener">ОБД «Мемориал»</a>, <a href="https://podvignaroda.ru/" target="_blank" rel="noopener">Подвиг народа</a>: участники войны, поиск по ФИО и месту рождения</li>
+      <li><a href="https://www.moypolk.ru/moscow/soldiers?search=Чайкин&count=50" target="_blank" rel="noopener">Бессмертный полк</a>: карточки ветеранов от семей, поиск по фамилии (Чайкин, Кремнев / Кремнёв)</li>
+      <li>ЗАГС, где регистрировали рождение родителей: повторные свидетельства с местами рождения и ФИО дедушек и бабушек — главный ключ к следующему поколению</li>
+      <li><a href="https://mits.mosreg.ru/ov/struktura-organa-vlasti/gku-mo-cgamo" target="_blank" rel="noopener">ЦГАМО</a>: метрические книги и записи актов Московской области примерно до 1929 года</li>
+      <li>ЦАМО, 142100, г. Подольск, ул. Кирова, д. 74: личные дела и учётные карточки военнослужащих</li>
+      <li><a href="https://ya.ru/archive" target="_blank" rel="noopener">Яндекс Архив</a> и <a href="https://www.familysearch.org/" target="_blank" rel="noopener">FamilySearch</a>: оцифрованные метрики и ревизские сказки — когда станут известны сёла предков</li>
+    </ul>
+  </section>
+</main>
+
+<script>
+const ROOT = "root";
+// Размеры карточек: в вертикальных видах важна ширина, в горизонтальном — высота
+const SIZES = {
+  vertical:   { card: 150, compact: 136, ph: 68, gapB: 12, gapD: 36 },
+  horizontal: { card: 180, compact: 160, ph: 104, gapB: 10, gapD: 34 },
+};
+
+const $ = id => document.getElementById(id);
+const tree = $("tree");
+let db = null, assets = null, canWrite = true;
+// Фото хранится в people/<id>.photo как id файла в хранилище древа
+const photoSrc = p => p && p.photo ? (window.__TREE_PHOTOS__[p.photo] || null) : null;
+function photoImg(p) {
+  const src = photoSrc(p);
+  if (!src) return null;
+  const img = document.createElement("img");
+  img.className = "photo";
+  img.src = src;
+  img.alt = "";
+  img.loading = "lazy";
+  img.addEventListener("error", () => img.remove());
+  return img;
+}
+let people = {};          // id -> person
+let loaded = false;
+let focusId = ROOT;
+const expanded = new Set();   // чьи колоды братьев и сестёр сейчас раскрыты
+
+// ─── Вопросы к семье ──────────────────────────────────────────────────────
+// asks/<id>: { target, question, status: "open" | "answered", createdAt }
+//   target — id человека или "slot:<id ребёнка>:father|mother" для пустого места
+// answers/<id>: { askId, text, author: "family", at }
+let asks = [];                // [{ id, a }]
+let answersByAsk = {};        // askId -> [answer]
+let asksKey = null, asksTitle = "";
+const slotKey = (childId, rel) => `slot:${childId}:${rel}`;
+const nodeKey = n => n.p ? n.id : slotKey(n.childId, n.rel);
+const asksFor = key => asks.filter(x => x.a.target === key);
+const openAsksFor = key => asksFor(key).filter(x => x.a.status !== "answered");
+// Значок «?» на карточке, пока есть открытые вопросы; закрытые видны в окне редактирования
+function askButton(key, title) {
+  const open = openAsksFor(key).length;
+  if (!open) return null;
+  const b = document.createElement("button");
+  b.type = "button";
+  b.className = "ask-btn";
+  b.textContent = "?";
+  b.title = open > 1 ? `Нужна информация от семьи (вопросов: ${open})` : "Нужна информация от семьи";
+  b.setAttribute("aria-label", b.title);
+  b.addEventListener("click", e => { e.stopPropagation(); hidePeek(); openDrawer(key, { from: "click" }); });
+  return b;
+}
+// ─── Просмотр и правка ────────────────────────────────────────────────────
+// В просмотре клик открывает справку, в правке — форму. Правка доступна только тем, кто может писать
+const editing = () => canWrite && !!prefs.edit;
+const reduceMotion = () => matchMedia("(prefers-reduced-motion: reduce)").matches;
+const EASE = "cubic-bezier(0.16, 1, 0.3, 1)";
+
+// Все узлы древа по ключу: id человека или «slot:…» для неизвестного места
+function nodeIndex() {
+  const idx = new Map();
+  if (!people[ROOT]) return idx;
+  walk(buildTree(true), n => { const k = nodeKey(n); if (!idx.has(k)) idx.set(k, n); });
+  return idx;
+}
+function slotFromKey(key) {
+  const [, childId, rel] = key.split(":");
+  const child = people[childId];
+  const childNode = nodeIndex().get(childId);
+  const path = childNode ? childNode.path + (rel === "father" ? "f" : "m") : "";
+  return { id: null, p: null, childId, rel, sex: rel === "father" ? "m" : "f", path };
+}
+// Клик по человеку или пустому месту в любом виде
+function activate(key, label) {
+  hidePeek();
+  if (editing()) {
+    if (key.startsWith("slot:")) { openEditor(slotFromKey(key)); return; }
+    openDrawer(key, { from: "click", label });
+    return;
+  }
+  openDrawer(key, { from: "click", label });
+}
+
+// ─── Быстрый просмотр при наведении ──────────────────────────────────────
+let peekTimer = null, peekKey = null;
+const finePointer = () => matchMedia("(hover: hover) and (pointer: fine)").matches;
+function relCounts(id) {
+  const kids = Object.keys(people).filter(k => people[k].father === id || people[k].mother === id);
+  return { sibs: siblingsOf(id).length, kids: kids.length };
+}
+function personHead(p, role, big) {
+  const head = document.createElement("div");
+  head.className = "d-head";
+  const txt = document.createElement("div");
+  const r = document.createElement("div"); r.className = "d-role"; r.textContent = role || "";
+  const h = document.createElement(big ? "h2" : "div"); h.className = "d-name"; h.textContent = p ? displayName(p) : role;
+  const m = document.createElement("div"); m.className = "d-meta";
+  if (p) {
+    m.append(datesOf(p) || "годы жизни неизвестны");
+    if (p.place) { const s = document.createElement("span"); s.textContent = " · " + p.place; m.appendChild(s); }
+  } else m.textContent = "Пока неизвестно";
+  txt.append(r, h, m);
+  head.appendChild(txt);
+  const img = p && photoImg(p);
+  if (img) head.appendChild(img);
+  return head;
+}
+function showPeek(el) {
+  const key = el.dataset.k;
+  const p = people[key] || null;
+  const peek = $("peek");
+  peek.innerHTML = "";
+  const n = nodeIndex().get(key);
+  const role = el.dataset.role || (n ? (roleOf(n.path, n.sex) || "Главный человек древа") : "");
+  if (!p && !key.startsWith("slot:")) return;
+  peek.appendChild(personHead(p, p ? role : (n ? slotTitle(n) : role), false));
+  if (p && p.notes) {
+    const t = document.createElement("div");
+    t.className = "p-notes";
+    t.textContent = p.notes.length > 900 ? p.notes.slice(0, 900) + "…" : p.notes;
+    peek.appendChild(t);
+  }
+  const facts = document.createElement("div");
+  facts.className = "p-facts";
+  const fact = (text, cls) => { const f = document.createElement("span"); f.className = "p-fact " + (cls || ""); f.textContent = text; facts.appendChild(f); };
+  const open = openAsksFor(key).length;
+  if (open) fact(open > 1 ? `Вопросов к семье: ${open}` : "Есть вопрос к семье", "ask");
+  const logs = logFor(key).length;
+  if (logs) fact(`В журнале: ${logs}`);
+  if (p) {
+    const c = relCounts(key);
+    if (c.sibs) fact(`Братья и сёстры: ${c.sibs}`);
+    if (c.kids) fact(`Дети в древе: ${c.kids}`);
+  }
+  if (facts.childNodes.length) peek.appendChild(facts);
+  const hint = document.createElement("div");
+  hint.className = "p-hint";
+  hint.textContent = editing() ? "Нажмите, чтобы изменить" : "Нажмите — полная справка с источниками";
+  peek.appendChild(hint);
+  // Рядом с карточкой: справа, а если не помещается — слева
+  const r = el.getBoundingClientRect();
+  const w = Math.min(340, innerWidth - 24);
+  let x = r.right + 12;
+  if (x + w > innerWidth - 12) x = r.left - w - 12;
+  if (x < 12) x = Math.min(innerWidth - w - 12, Math.max(12, r.left));
+  peek.style.left = x + "px";
+  peek.style.top = "0px";
+  peek.classList.add("show");
+  const h = peek.offsetHeight;
+  peek.style.top = Math.max(12, Math.min(innerHeight - h - 12, r.top - 8)) + "px";
+  peekKey = key;
+}
+function hidePeek() {
+  clearTimeout(peekTimer);
+  peekKey = null;
+  $("peek").classList.remove("show");
+}
+document.addEventListener("pointerover", e => {
+  if (!finePointer()) return;
+  const el = e.target.closest && e.target.closest("#tree [data-k], #tl-scroll [data-k]");
+  if (!el) { if (peekKey) hidePeek(); return; }
+  if (el.dataset.k === peekKey) return;
+  // Для человека, открытого в справке, превью не нужно
+  if (el.dataset.k === drawerKey) { if (peekKey) hidePeek(); return; }
+  clearTimeout(peekTimer);
+  peekTimer = setTimeout(() => showPeek(el), peekKey ? 60 : 260);
+});
+addEventListener("scroll", hidePeek, true);
+
+// ─── Справка о человеке (боковая панель) ─────────────────────────────────
+let drawerKey = null, drawerLabel = "";
+let drawerEdit = false;          // поля справки правятся по клику
+const drawerEditable = () => canWrite && !!db && (editing() || drawerEdit);
+const drawerHistory = [];
+function openDrawer(key, opts = {}) {
+  if (drawerKey && drawerKey !== key && opts.from !== "back") drawerHistory.push(drawerKey);
+  if (drawerKey !== key) drawerEdit = false;
+  drawerKey = key;
+  drawerLabel = opts.label || "";
+  if (editorOpen) { editorOpen = false; $("editor").hidden = true; $("d-body").hidden = false; }
+  renderDrawer(true);
+  const d = $("drawer");
+  const wasOpen = d.classList.contains("open");
+  d.classList.add("open");
+  d.setAttribute("aria-hidden", "false");
+  document.body.classList.add("with-drawer");
+  markSelected(opts.from === "nav");
+  if (!wasOpen) {
+    $("d-close").focus({ preventScroll: true });
+    // Древо сужается под панель: пересчитываем масштаб после выезда
+    setTimeout(() => { if (viewMode() !== "card") render(); markSelected(false); }, 340);
+  }
+}
+function closeDrawer() {
+  const d = $("drawer");
+  d.classList.remove("open");
+  d.setAttribute("aria-hidden", "true");
+  document.body.classList.remove("with-drawer");
+  drawerKey = null;
+  drawerHistory.length = 0;
+  markSelected(false);
+  setTimeout(() => { if (!drawerKey && viewMode() !== "card") render(); }, 340);
+}
+$("d-close").addEventListener("click", () => { editorOpen = false; $("editor").hidden = true; $("d-body").hidden = false; closeDrawer(); });
+$("d-back").addEventListener("click", () => {
+  if (editorOpen) { closeEditorPanel(); return; }
+  const k = drawerHistory.pop(); if (k) openDrawer(k, { from: "back" });
+});
+document.addEventListener("keydown", e => {
+  if (e.key !== "Escape" || document.querySelector("dialog[open]")) return;
+  if (editorOpen) closeEditorPanel();
+  else if (drawerKey) closeDrawer();
+});
+$("d-edit").addEventListener("click", () => {
+  if (!drawerKey) return;
+  if (drawerKey.startsWith("slot:")) { openEditor(slotFromKey(drawerKey)); return; }
+  drawerEdit = !drawerEdit;
+  renderDrawer(false);
+});
+// Подсветка выбранного; при переходе из справки — прокрутка к карточке и короткая вспышка
+function markSelected(reveal) {
+  for (const el of document.querySelectorAll(".selected")) el.classList.remove("selected");
+  if (!drawerKey) return;
+  const el = document.querySelector(`#tree [data-k="${CSS.escape(drawerKey)}"], #tl-scroll [data-k="${CSS.escape(drawerKey)}"]`);
+  if (!el) return;
+  el.classList.add("selected");
+  if (reveal) {
+    el.scrollIntoView({ block: "nearest", inline: "center", behavior: reduceMotion() ? "auto" : "smooth" });
+    el.classList.remove("pulse");
+    void el.offsetWidth;
+    el.classList.add("pulse");
+  }
+}
+function relButton(key, kind, unknownText) {
+  const b = document.createElement("button");
+  b.type = "button";
+  const p = people[key];
+  b.className = "rel-btn " + (p ? (p.sex || "") : "unknown");
+  const k = document.createElement("span"); k.className = "k"; k.textContent = kind;
+  const v = document.createElement("span"); v.className = "v";
+  v.textContent = p ? displayName(p) + (yearOf(p) < 9999 ? `, ${firstYear(p.born)}` : "") : unknownText;
+  b.append(k, v);
+  if (p || asksFor(key).length) b.addEventListener("click", () => openDrawer(key, { from: "nav" }));
+  else if (editing()) b.addEventListener("click", () => openEditor(slotFromKey(key)));
+  else b.disabled = true;
+  return b;
+}
+function section(title, count, cls) {
+  const s = document.createElement("section");
+  s.className = "d-sec " + (cls || "");
+  const h = document.createElement("h3");
+  h.append(title);
+  if (count != null) { const n = document.createElement("span"); n.className = "n"; n.textContent = count; h.appendChild(n); }
+  s.appendChild(h);
+  return s;
+}
+function askBlock(id, a, key, title) {
+  const box = document.createElement("div");
+  box.className = "d-ask";
+  const q = document.createElement("div"); q.className = "q"; q.append(linkify(a.question || ""));
+  box.appendChild(q);
+  for (const ans of (answersByAsk[id] || [])) {
+    const d = document.createElement("div"); d.className = "ans";
+    const w = document.createElement("div"); w.className = "who";
+    w.textContent = (ans.author === "claude" ? "Claude" : "Семья") + " · " + fmtDate(ans.at);
+    d.append(w, linkify(ans.text || ""));
+    box.appendChild(d);
+  }
+  if (canWrite && db && a.status !== "answered") {
+    const ta = document.createElement("textarea");
+    ta.placeholder = "Что известно: имена, даты, места, от кого услышали";
+    ta.setAttribute("aria-label", "Ответ на вопрос");
+    const row = document.createElement("div"); row.className = "row";
+    const send = document.createElement("button");
+    send.type = "button"; send.className = "btn primary"; send.textContent = "Сохранить ответ";
+    const note = document.createElement("span"); note.className = "req-note";
+    send.addEventListener("click", async () => {
+      const text = ta.value.trim();
+      if (!text) { note.textContent = "Впишите хотя бы пару слов."; return; }
+      send.disabled = true;
+      const at = new Date().toISOString();
+      try {
+        await db.collection("answers").add({ askId: id, target: key, text, author: "family", at });
+        await db.collection("log").add({ text: `Ответ на вопрос (${title}):\n«${a.question}»\n\n${text}`, author: "family", at, people: [key] });
+        ta.value = "";
+        note.textContent = "Сохранено.";
+      } catch { note.textContent = "Не сохранилось, попробуйте ещё раз."; }
+      finally { send.disabled = false; }
+    });
+    row.append(send, note);
+    box.append(ta, row);
+  }
+  return box;
+}
+function renderDrawer(swap) {
+  const key = drawerKey;
+  if (!key || editorOpen) return;
+  const body = $("d-body");
+  // Не перерисовываем, пока человек пишет ответ
+  if (!swap && ([...body.querySelectorAll("textarea:not(.inline-input)")].some(t => t.value.trim()) || body.querySelector(".inline-input"))) return;
+  const scrollTop = body.scrollTop;
+  body.innerHTML = "";
+  const isSlot = key.startsWith("slot:");
+  const p = isSlot ? null : people[key];
+  const idx = nodeIndex();
+  const n = isSlot ? (idx.get(key) || slotFromKey(key)) : idx.get(key);
+  if (!isSlot && !p) { closeDrawer(); return; }
+  const role = isSlot ? slotTitle(n) : (n ? (roleOf(n.path, n.sex) || "Главный человек древа") : drawerLabel);
+  $("d-crumb").textContent = role;
+  $("d-back").disabled = !drawerHistory.length;
+  // В режиме правки поля и так редактируются — кнопка нужна только для пустого места
+  $("d-edit").hidden = !canWrite || (!isSlot && editing());
+  $("d-edit").textContent = isSlot ? "Добавить" : (drawerEdit ? "Готово" : "Изменить");
+  $("d-edit").classList.toggle("primary", !isSlot && drawerEdit);
+  const editable = !isSlot && drawerEditable();
+  body.classList.toggle("editable", editable);
+  body.appendChild(editable ? editableHead(p, key, role) : personHead(p, role, true));
+  if (editable) {
+    const tip = document.createElement("div");
+    tip.className = "ed-tip";
+    tip.textContent = "Нажмите на любое поле, чтобы исправить. Enter или клик в стороне — сохранить, Esc — отменить.";
+    body.appendChild(tip);
+  }
+
+  // Вопросы к семье — первыми: это то, что двигает поиск
+  const list = asksFor(key).sort((x, y) => (x.a.status === "answered") - (y.a.status === "answered"));
+  if (list.length) {
+    const s = section("Нужно узнать у семьи", list.filter(x => x.a.status !== "answered").length || "все отвечены", "asks");
+    for (const { id, a } of list) s.appendChild(askBlock(id, a, key, role));
+    body.appendChild(s);
+  }
+  if (p && editable) {
+    const s = section("Что известно");
+    s.appendChild(inlineField(key, "notes", { multiline: true, cls: "d-notes", empty: "Добавить заметки: где жил, кем работал, откуда сведения", render: v => linkify(v) }));
+    body.appendChild(s);
+  } else if (p && p.notes) {
+    const s = section("Что известно");
+    const t = document.createElement("div"); t.className = "d-notes"; t.append(linkify(p.notes));
+    s.appendChild(t);
+    body.appendChild(s);
+  }
+  // Семья: навигация без возврата к древу
+  const fam = section("Семья");
+  const grid = document.createElement("div"); grid.className = "d-rel";
+  if (p) {
+    for (const [rel, kind] of [["father", "Отец"], ["mother", "Мать"]]) {
+      const pid = p[rel] && people[p[rel]] ? p[rel] : slotKey(key, rel);
+      grid.appendChild(relButton(pid, kind, editing() ? "+ добавить" : "неизвестно"));
+    }
+    const kids = Object.keys(people).filter(k => people[k].father === key || people[k].mother === key).sort((a, b) => yearOf(people[a]) - yearOf(people[b]));
+    const spouses = [...new Set(kids.map(k => people[k].father === key ? people[k].mother : people[k].father).filter(x => x && people[x]))];
+    for (const sp of spouses) { const b = relButton(sp, people[sp].sex === "f" ? "Жена" : "Муж"); b.classList.add("wide"); grid.appendChild(b); }
+    for (const k of kids) grid.appendChild(relButton(k, people[k].sex === "f" ? "Дочь" : "Сын"));
+    for (const sid of siblingsOf(key)) grid.appendChild(relButton(sid, people[sid].sex === "f" ? "Сестра" : "Брат"));
+  } else if (n && n.childId && people[n.childId]) {
+    const b = relButton(n.childId, people[n.childId].sex === "f" ? "Дочь" : "Сын");
+    b.classList.add("wide");
+    grid.appendChild(b);
+  }
+  if (grid.childNodes.length) { fam.appendChild(grid); body.appendChild(fam); }
+
+  // Журнал поиска по этому человеку
+  const logs = logFor(key);
+  const s = section("Журнал поиска", logs.length || null);
+  if (!logs.length) {
+    const e = document.createElement("div"); e.className = "d-empty";
+    e.textContent = isSlot ? "Пока не искали." : "Отдельных записей нет — сведения выше.";
+    s.appendChild(e);
+  } else {
+    const box = document.createElement("div"); box.className = "d-log";
+    const first = logs.slice(0, 3), rest = logs.slice(3);
+    renderEntries(box, first);
+    if (rest.length) {
+      const det = document.createElement("details");
+      const sum = document.createElement("summary"); sum.textContent = `Ещё записей: ${rest.length}`;
+      const more = document.createElement("div"); more.className = "d-log";
+      renderEntries(more, rest);
+      det.append(sum, more);
+      box.appendChild(det);
+    }
+    s.appendChild(box);
+  }
+  body.appendChild(s);
+  if (editable && key !== ROOT) {
+    const del = document.createElement("button");
+    del.type = "button";
+    del.className = "btn danger d-delete";
+    del.textContent = "Удалить человека из древа";
+    del.addEventListener("click", async () => {
+      if (!del.dataset.armed) { del.dataset.armed = "1"; del.textContent = "Точно удалить? Нажмите ещё раз"; return; }
+      del.disabled = true;
+      try { await deletePerson(key); closeDrawer(); }
+      catch { del.disabled = false; del.textContent = "Не получилось удалить — ещё раз"; }
+    });
+    body.appendChild(del);
+  }
+  if (swap) {
+    body.scrollTop = 0;
+    body.classList.remove("swap"); void body.offsetWidth; body.classList.add("swap");
+  } else body.scrollTop = scrollTop;
+}
+
+
+// ─── Правка прямо в справке ──────────────────────────────────────────────
+async function deletePerson(id) {
+  for (const [cid, c] of Object.entries(people)) {
+    if (c.father === id) await db.doc("people/" + cid).update({ father: null });
+    if (c.mother === id) await db.doc("people/" + cid).update({ mother: null });
+  }
+  await db.doc("people/" + id).delete();
+  if (focusId === id) focusId = ROOT;
+}
+// Поле, которое по клику превращается в ввод; сохраняется на Enter или потере фокуса
+function inlineField(key, field, o = {}) {
+  const wrap = document.createElement(o.tag || "div");
+  wrap.className = "ed-field " + (o.cls || "");
+  const value = () => o.get ? o.get(people[key] || {}) : (people[key] && people[key][field]) || "";
+  const show = () => {
+    wrap.innerHTML = "";
+    const v = value();
+    wrap.classList.toggle("is-empty", !v);
+    if (v) wrap.append(o.render ? o.render(v) : v);
+    else wrap.textContent = o.empty || "добавить";
+    wrap.tabIndex = 0;
+    wrap.setAttribute("role", "button");
+    wrap.setAttribute("aria-label", (o.label || o.empty || field) + (v ? ": " + v : "") + ". Нажмите, чтобы изменить");
+  };
+  const edit = e => {
+    if (wrap.querySelector(".inline-input")) return;
+    if (e && e.target.closest("a")) return;          // ссылки в заметках остаются ссылками
+    const input = document.createElement(o.multiline ? "textarea" : "input");
+    input.className = "inline-input";
+    input.value = value();
+    if (o.placeholder) input.placeholder = o.placeholder;
+    wrap.innerHTML = "";
+    wrap.removeAttribute("role");
+    wrap.tabIndex = -1;
+    wrap.appendChild(input);
+    if (o.multiline) { input.style.height = "0px"; input.style.height = Math.max(120, input.scrollHeight + 4) + "px"; }
+    input.focus();
+    if (!o.multiline) input.select();
+    let done = false;
+    const finish = async save => {
+      if (done) return;
+      done = true;
+      const nv = input.value.trim();
+      if (save && nv !== value()) {
+        if (field === "name" && !nv) { show(); flash(wrap, "Имя не может быть пустым", true); return; }
+        try {
+          await db.doc("people/" + key).update(o.toUpdate ? o.toUpdate(nv) : { [field]: nv });
+          show();
+          flash(wrap, "Сохранено");
+          return;
+        } catch { show(); flash(wrap, "Не сохранилось", true); return; }
+      }
+      show();
+      setTimeout(() => { if (drawerKey === key) renderDrawer(false); }, 0);
+    };
+    input.addEventListener("keydown", ev => {
+      if (ev.key === "Escape") { ev.stopPropagation(); finish(false); }
+      else if (ev.key === "Enter" && (!o.multiline || ev.metaKey || ev.ctrlKey)) { ev.preventDefault(); finish(true); }
+    });
+    input.addEventListener("blur", () => finish(true));
+    if (o.multiline) input.addEventListener("input", () => { input.style.height = "0px"; input.style.height = Math.max(120, input.scrollHeight + 4) + "px"; });
+  };
+  wrap.addEventListener("click", edit);
+  wrap.addEventListener("keydown", e => { if ((e.key === "Enter" || e.key === " ") && !wrap.querySelector(".inline-input")) { e.preventDefault(); edit(); } });
+  show();
+  return wrap;
+}
+function flash(el, text, bad) {
+  const f = document.createElement("span");
+  f.className = "ed-flash" + (bad ? " bad" : "");
+  f.textContent = text;
+  el.appendChild(f);
+  setTimeout(() => f.remove(), 1600);
+}
+// Годы жизни: показываются одной строкой, по клику открываются сразу два поля — рождение и смерть.
+// Сохраняется, когда фокус уходит из обоих полей или по Enter; Esc — отмена
+function yearsField(key) {
+  const wrap = document.createElement("span");
+  wrap.className = "ed-field ed-years";
+  const q = () => people[key] || {};
+  const show = () => {
+    const { born, died } = q();
+    wrap.innerHTML = "";
+    const text = born && died ? `${born} – ${died}` : born || (died ? `ум. ${died}` : "");
+    wrap.classList.toggle("is-empty", !text);
+    wrap.textContent = text || "Годы жизни";
+    wrap.tabIndex = 0;
+    wrap.setAttribute("role", "button");
+    wrap.setAttribute("aria-label", "Годы жизни" + (text ? ": " + text : "") + ". Нажмите, чтобы изменить");
+  };
+  const edit = e => {
+    if (wrap.querySelector(".inline-input")) return;
+    const clickedDied = e && e.offsetX > wrap.offsetWidth * 0.55 && q().died;
+    wrap.innerHTML = "";
+    wrap.removeAttribute("role");
+    wrap.tabIndex = -1;
+    const mk = (field, label, ph) => {
+      const l = document.createElement("label");
+      l.className = "yr";
+      const t = document.createElement("span"); t.textContent = label;
+      const i = document.createElement("input");
+      i.className = "inline-input"; i.value = q()[field] || ""; i.placeholder = ph;
+      l.append(t, i);
+      return [l, i];
+    };
+    const [lb, ib] = mk("born", "рождение", "1931 или 22.03.1931");
+    const [ld, id] = mk("died", "смерть", "если известна");
+    wrap.append(lb, ld);
+    (clickedDied ? id : ib).focus();
+    (clickedDied ? id : ib).select();
+    let done = false;
+    const finish = async save => {
+      if (done) return;
+      done = true;
+      const nb = ib.value.trim(), nd = id.value.trim();
+      const changed = nb !== (q().born || "") || nd !== (q().died || "");
+      if (save && changed) {
+        try { await db.doc("people/" + key).update({ born: nb, died: nd }); show(); flash(wrap, "Сохранено"); return; }
+        catch { show(); flash(wrap, "Не сохранилось", true); return; }
+      }
+      show();
+      setTimeout(() => { if (drawerKey === key) renderDrawer(false); }, 0);
+    };
+    for (const i of [ib, id]) {
+      i.addEventListener("keydown", ev => {
+        if (ev.key === "Escape") { ev.stopPropagation(); finish(false); }
+        else if (ev.key === "Enter") { ev.preventDefault(); finish(true); }
+      });
+    }
+    // Переход между двумя полями не закрывает правку
+    wrap.addEventListener("focusout", ev => { if (!wrap.contains(ev.relatedTarget)) finish(true); });
+  };
+  wrap.addEventListener("click", edit);
+  wrap.addEventListener("keydown", e => { if ((e.key === "Enter" || e.key === " ") && !wrap.querySelector(".inline-input")) { e.preventDefault(); edit(); } });
+  show();
+  return wrap;
+}
+
+// Шапка справки, где каждое поле правится по клику; фото меняется кликом по нему
+function editableHead(p, key, role) {
+  const head = document.createElement("div");
+  head.className = "d-head";
+  const txt = document.createElement("div");
+  const r = document.createElement("div"); r.className = "d-role"; r.textContent = role || "";
+  const name = inlineField(key, "name", { cls: "d-name", label: "Имя", empty: "Впишите имя", placeholder: "Фамилия, имя, отчество" });
+  txt.append(r, name);
+  if (p.sex === "f") txt.appendChild(inlineField(key, "maiden", { cls: "d-maiden", label: "Девичья фамилия", empty: "девичья фамилия", render: v => "урожд. " + v }));
+  const meta = document.createElement("div"); meta.className = "d-meta ed-meta";
+  meta.appendChild(yearsField(key));
+  const place = inlineField(key, "place", { cls: "d-place", label: "Место рождения", empty: "место рождения", placeholder: "село, район" });
+  txt.append(meta, place);
+  head.appendChild(txt);
+  // Фото: клик — выбрать новое; кнопка ниже — убрать
+  const ph = document.createElement("div");
+  ph.className = "ed-photo";
+  const img = photoImg(p);
+  if (img) ph.appendChild(img);
+  else { const e = document.createElement("span"); e.className = "ed-photo-empty"; e.textContent = "+ фото"; ph.appendChild(e); }
+  if (assets) {
+    const file = document.createElement("input");
+    file.type = "file"; file.accept = "image/jpeg,image/png,image/webp,image/gif"; file.hidden = true;
+    ph.tabIndex = 0;
+    ph.setAttribute("role", "button");
+    ph.setAttribute("aria-label", img ? "Заменить фото" : "Добавить фото");
+    ph.title = img ? "Заменить фото" : "Добавить фото";
+    const pick = () => file.click();
+    ph.addEventListener("click", e => { if (!e.target.closest(".ed-photo-del")) pick(); });
+    ph.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); pick(); } });
+    file.addEventListener("change", async () => {
+      const f = file.files[0];
+      if (!f) return;
+      ph.classList.add("busy");
+      try { await db.doc("people/" + key).update({ photo: (await assets.upload(f)).id }); }
+      catch (err) { ph.classList.remove("busy"); flash(ph, err && err.code === "too_large" ? "Файл больше 20 МБ" : "Не загрузилось", true); }
+    });
+    ph.appendChild(file);
+    if (img) {
+      const del = document.createElement("button");
+      del.type = "button"; del.className = "ed-photo-del"; del.textContent = "убрать";
+      del.addEventListener("click", async () => { try { await db.doc("people/" + key).update({ photo: null }); } catch { flash(ph, "Не получилось", true); } });
+      ph.appendChild(del);
+    }
+  }
+  head.appendChild(ph);
+  return head;
+}
+
+// Список всех открытых вопросов внизу страницы
+function renderOpenAsks() {
+  const box = $("open-asks");
+  if (!box) return;
+  box.innerHTML = "";
+  const open = asks.filter(x => x.a.status !== "answered");
+  if (!open.length) {
+    const d = document.createElement("div"); d.className = "d-empty";
+    d.textContent = asks.length ? "Все вопросы отвечены." : "Вопросов пока нет.";
+    box.appendChild(d);
+    return;
+  }
+  const idx = nodeIndex();
+  for (const { a } of open) {
+    const key = a.target;
+    const n = idx.get(key);
+    const who = key.startsWith("slot:") ? (n ? slotTitle(n) : "Неизвестный предок") : (people[key] ? displayName(people[key]) : "");
+    const b = document.createElement("button");
+    b.type = "button";
+    b.className = "rel-btn ask-item-btn";
+    const k = document.createElement("span"); k.className = "k"; k.textContent = who;
+    const v = document.createElement("span"); v.className = "v"; v.textContent = (a.question || "").split("\n")[0];
+    b.append(k, v);
+    b.addEventListener("click", () => openDrawer(key, { from: "nav" }));
+    box.appendChild(b);
+  }
+}
+
+function slotTitle(n) {
+  const child = people[n.childId];
+  return `${n.rel === "father" ? "Отец" : "Мать"}: ${child ? displayName(child) : ""}`;
+}
+const fmtDate = s => s ? new Date(s).toLocaleDateString("ru-RU", { day: "numeric", month: "long", year: "numeric" }) : "";
+
+function renderAsksDialog() {
+  const box = $("a-list");
+  box.innerHTML = "";
+  $("a-title").textContent = asksTitle;
+  const list = asksFor(asksKey).sort((x, y) =>
+    (x.a.status === "answered") - (y.a.status === "answered") || String(x.a.createdAt).localeCompare(String(y.a.createdAt)));
+  if (!list.length) {
+    const d = document.createElement("div");
+    d.className = "meta";
+    d.textContent = "Вопросов нет.";
+    box.appendChild(d);
+    return;
+  }
+  for (const { id, a } of list) {
+    const item = document.createElement("div");
+    item.className = "ask-item" + (a.status === "answered" ? " done" : "");
+    const meta = document.createElement("div");
+    meta.className = "meta";
+    meta.textContent = (a.status === "answered" ? "Вопрос закрыт" : "Нужно узнать") + (a.createdAt ? " · " + fmtDate(a.createdAt) : "");
+    const q = document.createElement("div");
+    q.className = "q";
+    q.append(linkify(a.question || ""));
+    item.append(meta, q);
+    for (const ans of (answersByAsk[id] || [])) {
+      const d = document.createElement("div");
+      d.className = "ask-ans";
+      const who = document.createElement("div");
+      who.className = "who";
+      const b = document.createElement("b");
+      b.textContent = ans.author === "claude" ? "Claude" : "Семья";
+      who.append(b, " · " + fmtDate(ans.at));
+      d.append(who, linkify(ans.text || ""));
+      item.appendChild(d);
+    }
+    if (canWrite && db) {
+      const ta = document.createElement("textarea");
+      ta.placeholder = "Что известно: имена, даты, места, от кого услышали";
+      ta.setAttribute("aria-label", "Ответ или дополнение");
+      const note = document.createElement("div");
+      note.className = "req-note";
+      const actions = document.createElement("div");
+      actions.className = "actions";
+      const send = document.createElement("button");
+      send.type = "button";
+      send.className = "btn primary";
+      send.textContent = "Добавить ответ";
+      send.addEventListener("click", async () => {
+        const text = ta.value.trim();
+        if (!text) { note.textContent = "Впишите хотя бы пару слов."; return; }
+        send.disabled = true;
+        const at = new Date().toISOString();
+        try {
+          await db.collection("answers").add({ askId: id, target: asksKey, text, author: "family", at });
+          // Копия в журнал, чтобы ответ был виден рядом с остальными находками
+          await db.collection("log").add({ text: `Ответ на вопрос (${asksTitle}):\n«${a.question}»\n\n${text}`, author: "family", at, people: [asksKey] });
+          ta.value = "";
+          note.textContent = "Сохранено. Claude прочитает ответ при следующем поиске.";
+        } catch {
+          note.textContent = "Не сохранилось. Проверьте связь и нажмите ещё раз.";
+        } finally {
+          send.disabled = false;
+        }
+      });
+      actions.appendChild(send);
+      item.append(ta, actions, note);
+    }
+    box.appendChild(item);
+  }
+}
+function openAsks(key, title) {
+  asksKey = key;
+  asksTitle = title;
+  renderAsksDialog();
+  $("asks-dialog").showModal();
+}
+$("a-close").addEventListener("click", () => $("asks-dialog").close());
+// Обновления приходят вживую; не перерисовываем, пока человек печатает ответ
+function refreshAsksDialog() {
+  const dlg = $("asks-dialog");
+  if (!dlg.open) return;
+  const typing = [...dlg.querySelectorAll("textarea")].some(t => t.value.trim());
+  if (!typing) renderAsksDialog();
+}
+
+// ─── Настройки вида (только для этого браузера) ──────────────────────────
+const PREFS_KEY = "rodoslovnaya-view";
+const prefs = { dir: "lr", mode: null, empty: true, sibs: true };
+try { Object.assign(prefs, JSON.parse(localStorage.getItem(PREFS_KEY) || "{}")); } catch {}
+function savePrefs() { try { localStorage.setItem(PREFS_KEY, JSON.stringify(prefs)); } catch {} }
+const isNarrow = () => matchMedia("(max-width: 640px)").matches;
+const viewMode = () => prefs.mode || (isNarrow() ? "card" : "tree");
+
+// ─── Подписи ──────────────────────────────────────────────────────────────
+// path: цепочка "f"/"m" от Александра вверх, например "fm" = мать отца
+function roleOf(path, sex) {
+  if (!path) return "";
+  const g = path.length;
+  if (g === 1) return sex === "m" ? "Отец" : "Мать";
+  const side = path[0] === "f" ? "по отцу" : "по матери";
+  const base = (g === 2 ? "" : "пра".repeat(g - 2)) + (sex === "m" ? "дедушка" : "бабушка");
+  return base[0].toUpperCase() + base.slice(1) + " " + side;
+}
+function displayName(p) {
+  if (!p.name) return "Без имени";
+  return p.maiden ? `${p.name} (урожд. ${p.maiden})` : p.name;
+}
+// Текст со ссылками: каждый адрес источника становится кликабельным
+const URL_RE = /https?:\/\/[^\s<>"«»]+/g;
+function cleanUrl(u) { return u.replace(/[.,;:!?)]+$/, ""); }
+function linkify(text) {
+  const frag = document.createDocumentFragment();
+  let last = 0;
+  for (const m of text.matchAll(URL_RE)) {
+    const url = cleanUrl(m[0]);
+    frag.append(text.slice(last, m.index));
+    const a = document.createElement("a");
+    a.href = url; a.target = "_blank"; a.rel = "noopener";
+    a.textContent = url;
+    frag.append(a);
+    last = m.index + url.length;
+  }
+  frag.append(text.slice(last));
+  return frag;
+}
+function renderEditorLinks() {
+  const box = $("e-links");
+  const urls = [...new Set(($("f-notes").value.match(URL_RE) || []).map(cleanUrl))];
+  box.innerHTML = "";
+  box.hidden = !urls.length;
+  if (!urls.length) return;
+  const b = document.createElement("b");
+  b.textContent = "Ссылки из заметок";
+  box.appendChild(b);
+  for (const u of urls) {
+    const a = document.createElement("a");
+    a.href = u; a.target = "_blank"; a.rel = "noopener"; a.textContent = u;
+    box.appendChild(a);
+  }
+}
+
+function datesOf(p) {
+  if (p.born && p.died) return `${p.born} – ${p.died}`;
+  if (p.born) return `род. ${p.born}`;
+  if (p.died) return `ум. ${p.died}`;
+  return "";
+}
+
+// ─── Братья и сёстры: общие отец или мать, либо явная связь siblingOf ─────
+const yearOf = p => { const m = String(p.born || "").match(/\d{4}/); return m ? +m[0] : 9999; };
+function siblingsOf(id) {
+  const p = people[id];
+  if (!p) return [];
+  return Object.keys(people).filter(sid => {
+    if (sid === id) return false;
+    const s = people[sid];
+    return (p.father && s.father === p.father) || (p.mother && s.mother === p.mother)
+      || s.siblingOf === id || sid === p.siblingOf || (p.siblingOf && s.siblingOf === p.siblingOf);
+  }).sort((a, b) => yearOf(people[a]) - yearOf(people[b]));
+}
+function siblingLabel(sid) {
+  const s = people[sid];
+  const y = yearOf(s) < 9999 ? `, ${s.born}` : "";
+  return displayName(s) + y;
+}
+// Блок «Братья и сёстры» для человека n; пусто, если показывать нечего
+function sibsBlock(n) {
+  const ids = siblingsOf(n.id);
+  if (!ids.length && !editing()) return null;
+  const box = document.createElement("div");
+  box.className = "sibs";
+  const k = document.createElement("div");
+  k.className = "sibs-k";
+  k.textContent = "Братья и сёстры";
+  box.appendChild(k);
+  for (const sid of ids) {
+    const b = document.createElement("button");
+    b.type = "button";
+    b.className = `sib ${people[sid].sex || ""}`;
+    b.textContent = siblingLabel(sid);
+    b.addEventListener("click", e => {
+      e.stopPropagation();
+      activate(sid, `${people[sid].sex === "f" ? "Сестра" : "Брат"}: ${displayName(n.p)}`);
+    });
+    box.appendChild(b);
+  }
+  if (editing()) {
+    const add = document.createElement("button");
+    add.type = "button";
+    add.className = "sib add";
+    add.textContent = "+ брат/сестра";
+    add.addEventListener("click", e => {
+      e.stopPropagation();
+      openEditor({ id: null, sex: "m", siblingOf: n.id, label: `Брат или сестра: ${displayName(n.p)}` });
+    });
+    box.appendChild(add);
+  }
+  return box;
+}
+
+// ─── Модель: дерево предков из людей и пустых мест ───────────────────────
+function buildTree(showEmpty) {
+  const seen = new Set();
+  function node(id, path, sex, childId, rel, depth) {
+    const p = id ? people[id] : null;
+    const n = { id: p ? id : null, p, path, sex: (p && p.sex) || sex, childId, rel, depth, kids: [] };
+    if (p && !seen.has(id)) {
+      seen.add(id);
+      for (const [psex, key, step] of [["m", "father", "f"], ["f", "mother", "m"]]) {
+        const pid = p[key] && people[p[key]] ? p[key] : null;
+        // Пустое место показываем всегда, если по нему есть вопрос к семье
+        if (pid || showEmpty || asksFor(slotKey(id, key)).length) n.kids.push(node(pid, path + step, psex, id, key, depth + 1));
+      }
+    }
+    return n;
+  }
+  return node(ROOT, "", people[ROOT].sex || "f", null, null, 0);
+}
+function walk(n, fn) { fn(n); n.kids.forEach(k => walk(k, fn)); }
+function findNode(rootNode, id) {
+  let hit = null;
+  walk(rootNode, n => { if (!hit && n.id === id) hit = n; });
+  return hit;
+}
+
+// Плотная раскладка: листья идут подряд, родитель встаёт по центру над своими родителями.
+// b — ось «поперёк поколений», d — ось поколений. Каждая ветка занимает ровно своё место.
+function layout(rootNode, sizeOf, gapB, gapD) {
+  const levels = [];
+  walk(rootNode, n => {
+    const s = sizeOf(n);
+    n.sb = s.b; n.sd = s.d;
+    n.extra = s.extra || 0;   // место справа/снизу под раскрытую колоду братьев и сестёр
+    levels[n.depth] = Math.max(levels[n.depth] || 0, s.d, s.extraD || 0);
+  });
+  const off = [];
+  let acc = 0;
+  levels.forEach((v, k) => { off[k] = acc; acc += v + gapD; });
+  const shift = (n, dx) => walk(n, m => { m.cb += dx; });
+  let cursor = 0;
+  (function place(n) {
+    n.d0 = off[n.depth];
+    if (!n.kids.length) {
+      n.cb = cursor + n.sb / 2;
+    } else {
+      const start = cursor;
+      n.kids.forEach(place);
+      n.cb = (n.kids[0].cb + n.kids[n.kids.length - 1].cb) / 2;
+      const overflow = start - (n.cb - n.sb / 2);
+      if (overflow > 0) { shift(n, overflow); cursor += overflow; }
+    }
+    cursor = Math.max(cursor, n.cb + n.sb / 2 + n.extra + gapB);
+  })(rootNode);
+  return { totalB: Math.max(0, cursor - gapB), totalD: Math.max(0, acc - gapD) };
+}
+
+// Перевод осей (b, d) в экранные (x, y) для выбранного направления
+function mapper(dir, H) {
+  if (dir === "td") return (b, d) => [b, d];
+  if (dir === "bu") return (b, d) => [b, H - d];
+  return (b, d) => [d, b];
+}
+
+// ─── Вид «Древо» ──────────────────────────────────────────────────────────
+function makeCard(n, vertical) {
+  const sz = vertical ? SIZES.vertical : SIZES.horizontal;
+  const role = roleOf(n.path, n.sex);
+  if (!n.p) {
+    const card = document.createElement("div");
+    card.className = `card ph ${n.sex}`;
+    card.style.width = sz.ph + "px";
+    const main = document.createElement("button");
+    main.type = "button";
+    main.className = "card-main";
+    const word = n.sex === "m" ? "отец" : "мать";
+    main.textContent = editing() ? "+ " + word : word + "?";
+    main.title = editing() ? `Добавить: ${role.toLowerCase()}` : `Неизвестно: ${role.toLowerCase()}`;
+    main.addEventListener("click", () => activate(nodeKey(n)));
+    card.dataset.k = nodeKey(n);
+    card.appendChild(main);
+    const ask = askButton(nodeKey(n), slotTitle(n));
+    if (ask) card.appendChild(ask);
+    return card;
+  }
+  const compact = n.depth >= 3;
+  const card = document.createElement("div");
+  card.className = `card ${n.sex} ${n.depth === 0 ? "root" : ""} ${compact ? "compact" : ""}`;
+  card.style.width = (compact ? sz.compact : sz.card) + "px";
+  const main = document.createElement("button");
+  main.type = "button";
+  main.className = "card-main";
+  const parts = [];
+  if (role) parts.push(["role", role]);
+  parts.push(["name", displayName(n.p)]);
+  if (datesOf(n.p)) parts.push(["dates", datesOf(n.p)]);
+  if (n.p.place) parts.push(["place", n.p.place]);
+  if (n.p.notes) parts.push(["has-notes", "есть заметки"]);
+  const img = photoImg(n.p);
+  if (img) main.appendChild(img);
+  for (const [cls, text] of parts) {
+    const d = document.createElement("div");
+    d.className = cls; d.textContent = text;
+    main.appendChild(d);
+  }
+  main.addEventListener("click", () => activate(n.id));
+  card.dataset.k = n.id;
+  card.appendChild(main);
+  const ask = askButton(n.id, displayName(n.p));
+  if (ask) card.appendChild(ask);
+  return card;
+}
+
+// Карточка брата/сестры в раскрытой «колоде»; без sid — кнопка добавления
+function makeSibCard(n, sid, vertical) {
+  const sz = vertical ? SIZES.vertical : SIZES.horizontal;
+  const compact = n.depth >= 3;
+  const card = document.createElement("button");
+  card.type = "button";
+  card.style.width = (compact ? sz.compact : sz.card) + "px";
+  if (!sid) {
+    card.className = "card sib-card add";
+    card.textContent = "+ брат или сестра";
+    card.addEventListener("click", () =>
+      openEditor({ id: null, sex: "m", siblingOf: n.id, label: `Брат или сестра: ${displayName(n.p)}` }));
+    return card;
+  }
+  const s = people[sid];
+  card.className = `card sib-card ${s.sex || ""} ${compact ? "compact" : ""}`;
+  const img = photoImg(s);
+  if (img) card.appendChild(img);
+  const parts = [["role", s.sex === "f" ? "Сестра" : "Брат"], ["name", displayName(s)]];
+  if (datesOf(s)) parts.push(["dates", datesOf(s)]);
+  if (s.notes) parts.push(["has-notes", "есть заметки"]);
+  for (const [cls, text] of parts) {
+    const d = document.createElement("div");
+    d.className = cls; d.textContent = text;
+    card.appendChild(d);
+  }
+  const label = `${s.sex === "f" ? "Сестра" : "Брат"}: ${displayName(n.p)}`;
+  card.dataset.k = sid;
+  card.dataset.role = label;
+  card.addEventListener("click", () => activate(sid, label));
+  return card;
+}
+
+function renderTree() {
+  const dir = prefs.dir, vertical = dir !== "lr";
+  const sz = vertical ? SIZES.vertical : SIZES.horizontal;
+  const rootNode = buildTree(prefs.empty && editing());
+
+  // FLIP: запоминаем, где карточки стояли до перерисовки
+  const before = new Map();
+  for (const el of tree.querySelectorAll("[data-k]")) {
+    if (!before.has(el.dataset.k)) before.set(el.dataset.k, [parseFloat(el.style.left) || 0, parseFloat(el.style.top) || 0]);
+  }
+  tree.innerHTML = "";
+  tree.style.zoom = 1;
+  const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+  tree.appendChild(svg);
+  const bOf = el => vertical ? el.offsetWidth : el.offsetHeight;
+  const dOf = el => vertical ? el.offsetHeight : el.offsetWidth;
+  walk(rootNode, n => {
+    n.sibIds = n.p && prefs.sibs ? siblingsOf(n.id) : [];
+    n.open = n.sibIds.length > 0 && expanded.has(n.id);
+    // Колода: 1–2 листа под карточкой, пока она свёрнута
+    n.sheets = [];
+    if (n.sibIds.length && !n.open) {
+      for (let i = Math.min(2, n.sibIds.length); i > 0; i--) {
+        const sh = document.createElement("div");
+        sh.className = "deck-sheet";
+        sh.dataset.sheet = i;
+        tree.appendChild(sh);
+        n.sheets.push(sh);
+      }
+    }
+    n.el = makeCard(n, vertical);
+    tree.appendChild(n.el);
+    if (n.p && prefs.sibs && (n.sibIds.length || editing())) {
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "deck-btn" + (n.sibIds.length ? "" : " add");
+      btn.textContent = n.sibIds.length ? (n.open ? "свернуть" : `+${n.sibIds.length}`) : "+";
+      btn.title = n.sibIds.length
+        ? (n.open ? "Свернуть братьев и сестёр" : `Братья и сёстры: ${n.sibIds.length}. Нажмите, чтобы раскрыть`)
+        : "Добавить брата или сестру";
+      btn.addEventListener("click", e => {
+        e.stopPropagation();
+        if (!n.sibIds.length) {
+          openEditor({ id: null, sex: "m", siblingOf: n.id, label: `Брат или сестра: ${displayName(n.p)}` });
+          return;
+        }
+        if (expanded.has(n.id)) expanded.delete(n.id); else expanded.add(n.id);
+        render();
+      });
+      n.el.appendChild(btn);
+    }
+    n.sibEls = [];
+    if (n.open) {
+      for (const sid of n.sibIds) n.sibEls.push(makeSibCard(n, sid, vertical));
+      if (editing()) n.sibEls.push(makeSibCard(n, null, vertical));
+      n.sibEls.forEach(el => tree.appendChild(el));
+    }
+  });
+
+  const { totalB, totalD } = layout(rootNode, n => ({
+    b: bOf(n.el), d: dOf(n.el),
+    extra: n.sibEls.reduce((s, el) => s + bOf(el) + sz.gapB, 0),
+    extraD: n.sibEls.reduce((m, el) => Math.max(m, dOf(el)), 0),
+  }), sz.gapB, sz.gapD);
+  const W = vertical ? totalB : totalD, H = vertical ? totalD : totalB;
+  const xy = mapper(dir, H);
+  const placeRect = (el, b0, b1, d0, d1) => {
+    const [x1, y1] = xy(b0, d0), [x2, y2] = xy(b1, d1);
+    el.style.left = Math.min(x1, x2) + "px";
+    el.style.top = Math.min(y1, y2) + "px";
+  };
+
+  walk(rootNode, n => {
+    placeRect(n.el, n.cb - n.sb / 2, n.cb + n.sb / 2, n.d0, n.d0 + n.sd);
+    for (const sh of n.sheets) {
+      const k = +sh.dataset.sheet * 5;
+      sh.style.width = n.el.offsetWidth + "px";
+      sh.style.height = n.el.offsetHeight + "px";
+      sh.style.left = (parseFloat(n.el.style.left) + k) + "px";
+      sh.style.top = (parseFloat(n.el.style.top) - k) + "px";
+    }
+    // Раскрытая колода: карточки в ряд на том же уровне, пунктир от человека
+    let b = n.cb + n.sb / 2 + sz.gapB;
+    for (const el of n.sibEls) {
+      const eb = bOf(el), ed = dOf(el);
+      placeRect(el, b, b + eb, n.d0, n.d0 + ed);
+      const midD = n.d0 + Math.min(n.sd, ed) / 2;
+      const pts = [[b - sz.gapB, midD], [b, midD]].map(([pb, pd]) => xy(pb, pd));
+      const line = document.createElementNS("http://www.w3.org/2000/svg", "path");
+      line.setAttribute("class", "sib");
+      line.setAttribute("d", "M" + pts.map(p => p.join(",")).join(" L"));
+      svg.appendChild(line);
+      b += eb + sz.gapB;
+    }
+    for (const k of n.kids) {
+      const mid = k.d0 - sz.gapD / 2;
+      const pts = [[n.cb, n.d0 + n.sd], [n.cb, mid], [k.cb, mid], [k.cb, k.d0]].map(([b, d]) => xy(b, d));
+      const line = document.createElementNS("http://www.w3.org/2000/svg", "path");
+      line.setAttribute("d", "M" + pts.map(p => p.join(",")).join(" L"));
+      svg.appendChild(line);
+    }
+  });
+
+  // Запас справа под выглядывающие листы колоды и значок «+N»
+  tree.style.width = (W + 14) + "px";
+  tree.style.height = H + "px";
+  svg.setAttribute("width", W);
+  svg.setAttribute("height", H);
+  const avail = tree.parentElement.clientWidth;
+  tree.style.zoom = Math.max(0.55, Math.min(1, avail / W));
+  markSelected(false);
+  lastTree = { rootNode, dir };
+  // Плющ включён: после перерисовки он уже вырос — рисуем сразу целиком
+  if (ivy.on) { if (ivy.pending) { ivy.pending = false; drawIvy(true); } else drawIvy(false); }
+
+  // FLIP: карточки переезжают со старых мест на новые — видно, что куда делось
+  // при смене направления, раскрытии колоды, добавлении человека
+  if (!before.size || reduceMotion()) return;
+  let moved = false;
+  for (const el of tree.querySelectorAll("[data-k]")) {
+    const old = before.get(el.dataset.k);
+    if (old) {
+      const dx = old[0] - (parseFloat(el.style.left) || 0), dy = old[1] - (parseFloat(el.style.top) || 0);
+      if (Math.abs(dx) + Math.abs(dy) < 1) continue;
+      moved = true;
+      el.animate([{ transform: `translate(${dx}px, ${dy}px)` }, { transform: "none" }], { duration: 420, easing: EASE });
+    } else {
+      moved = true;
+      el.animate([{ opacity: 0, transform: "scale(.94)" }, { opacity: 1, transform: "none" }],
+        { duration: 260, delay: 140, easing: EASE, fill: "backwards" });
+    }
+  }
+  if (moved) {
+    svg.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 260, delay: 260, fill: "backwards" });
+    for (const sh of tree.querySelectorAll(".deck-sheet")) sh.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 200, delay: 300, fill: "backwards" });
+  }
+}
+
+// ─── Плющ: побег растёт от Александра по линиям древа и обвивает каждую карточку ─
+// Запускается только кнопкой в верхней панели; той же кнопкой убирается
+const ivy = { on: false, svg: null, pending: false };
+let lastTree = null;
+const CLEMATIS_PETAL = "M0 0C2.6-2.2 4.4-6.2 3.4-10.4 2.8-12.6 1.2-14 0-14.8-1.2-14-2.8-12.6-3.4-10.4-4.4-6.2-2.6-2.2 0 0Z";
+const IVY_LEAF = "M0 0C-2.6-1.6-6.4-2.4-8-6.2C-6.6-7.4-4.4-7.2-3.2-8.6C-2.6-11.6 2.6-11.6 3.2-8.6C4.4-7.2 6.6-7.4 8-6.2C6.4-2.4 2.6-1.6 0 0Z";
+
+// Псевдослучайность от строки: один и тот же человек — одинаковый узор побега
+function seeded(str) {
+  let h = 2166136261;
+  for (const c of str) h = Math.imul(h ^ c.charCodeAt(0), 16777619);
+  return () => ((h = Math.imul(h ^ (h >>> 15), 2246822507), h ^= h >>> 13, (h >>> 0) % 10000) / 10000);
+}
+// Ломаная → частые точки → волнистая линия; возвращает точки с накопленной длиной
+function vineSamples(poly, amp, period, rnd) {
+  const pts = [];
+  let s = 0;
+  const phase = rnd() * Math.PI * 2;
+  for (let i = 0; i < poly.length - 1; i++) {
+    const [x1, y1] = poly[i], [x2, y2] = poly[i + 1];
+    const len = Math.hypot(x2 - x1, y2 - y1);
+    if (!len) continue;
+    const nx = -(y2 - y1) / len, ny = (x2 - x1) / len;
+    const steps = Math.max(1, Math.round(len / 5));
+    for (let k = i ? 1 : 0; k <= steps; k++) {
+      const t = k / steps, d = s + len * t;
+      const w = Math.sin(d / period * Math.PI * 2 + phase) * amp * (0.75 + 0.25 * Math.sin(d / 37));
+      pts.push({ x: x1 + (x2 - x1) * t + nx * w, y: y1 + (y2 - y1) * t + ny * w, d, nx, ny });
+    }
+    s += len;
+  }
+  return pts;
+}
+function samplesToPath(pts) {
+  if (!pts.length) return "";
+  let d = `M${pts[0].x.toFixed(1)} ${pts[0].y.toFixed(1)}`;
+  for (let i = 1; i < pts.length - 1; i++) {
+    const mx = (pts[i].x + pts[i + 1].x) / 2, my = (pts[i].y + pts[i + 1].y) / 2;
+    d += `Q${pts[i].x.toFixed(1)} ${pts[i].y.toFixed(1)} ${mx.toFixed(1)} ${my.toFixed(1)}`;
+  }
+  const l = pts[pts.length - 1];
+  return d + `L${l.x.toFixed(1)} ${l.y.toFixed(1)}`;
+}
+const boxOf = el => ({ x: parseFloat(el.style.left) || 0, y: parseFloat(el.style.top) || 0, w: el.offsetWidth, h: el.offsetHeight });
+// Обход по краю карточки (чуть снаружи), от точки входа, примерно на три четверти периметра
+function wrapPoly(b, side, frac) {
+  const p = 4, x0 = b.x - p, y0 = b.y - p, x1 = b.x + b.w + p, y1 = b.y + b.h + p;
+  const corners = { left: [x0, (y0 + y1) / 2], top: [(x0 + x1) / 2, y0], right: [x1, (y0 + y1) / 2], bottom: [(x0 + x1) / 2, y1] };
+  // По часовой стрелке от точки входа
+  const ring = { left: [[x0, y0], [x1, y0], [x1, y1], [x0, y1]], top: [[x1, y0], [x1, y1], [x0, y1], [x0, y0]],
+                 right: [[x1, y1], [x0, y1], [x0, y0], [x1, y0]], bottom: [[x0, y1], [x0, y0], [x1, y0], [x1, y1]] }[side];
+  const poly = [corners[side], ...ring, corners[side]];
+  const per = 2 * (b.w + b.h + 4 * p);
+  const want = per * frac;
+  const out = [poly[0]];
+  let acc = 0;
+  for (let i = 0; i < poly.length - 1; i++) {
+    const [ax, ay] = poly[i], [bx, by] = poly[i + 1];
+    const l = Math.hypot(bx - ax, by - ay);
+    if (acc + l >= want) { const t = (want - acc) / l; out.push([ax + (bx - ax) * t, ay + (by - ay) * t]); break; }
+    out.push(poly[i + 1]);
+    acc += l;
+  }
+  return out;
+}
+function drawIvy(animate) {
+  removeIvy(false);
+  if (!lastTree) return;
+  const { rootNode, dir } = lastTree;
+  const NS = "http://www.w3.org/2000/svg";
+  const svg = document.createElementNS(NS, "svg");
+  svg.classList.add("ivy");
+  svg.setAttribute("aria-hidden", "true");
+  svg.setAttribute("width", tree.offsetWidth);
+  svg.setAttribute("height", tree.offsetHeight);
+  const stems = document.createElementNS(NS, "g"), leaves = document.createElementNS(NS, "g"), flowers = document.createElementNS(NS, "g");
+  let lastGrow = null;
+  svg.append(stems, leaves, flowers);
+  tree.appendChild(svg);
+  ivy.svg = svg;
+  const motion = animate && !reduceMotion();
+  const SPEED = 300;                       // пикселей в секунду
+  const items = [];
+  // Куда входит линия к родителю и откуда выходит от ребёнка — зависит от направления древа
+  const exitSide = { lr: "right", td: "bottom", bu: "top" }[dir];
+  const enterSide = { lr: "left", td: "top", bu: "bottom" }[dir];
+  const mid = (b, side) => side === "left" ? [b.x, b.y + b.h / 2] : side === "right" ? [b.x + b.w, b.y + b.h / 2]
+    : side === "top" ? [b.x + b.w / 2, b.y] : [b.x + b.w / 2, b.y + b.h];
+
+  // Лист: группа ставит его на место (атрибут transform), сам лист растёт и качается
+  // через отдельные свойства scale/rotate вокруг своего черешка
+  // Карточки, на которые листьям заходить нельзя: текст должен читаться
+  const cardRects = [...tree.querySelectorAll(".card")].map(boxOf);
+  const overCard = (x, y) => cardRects.some(r => x > r.x + 3 && x < r.x + r.w - 3 && y > r.y + 3 && y < r.y + r.h - 3);
+  function addLeaf(x, y, ang, size, start, rnd) {
+    const rad = ang * Math.PI / 180, reach = 11.6 * size;
+    if (overCard(x + Math.sin(rad) * reach, y - Math.cos(rad) * reach) || overCard(x + Math.sin(rad) * reach * .5, y - Math.cos(rad) * reach * .5)) return;
+    const g = document.createElementNS(NS, "g");
+    g.setAttribute("transform", `translate(${x.toFixed(1)} ${y.toFixed(1)}) rotate(${ang.toFixed(0)})`);
+    const leaf = document.createElementNS(NS, "path");
+    leaf.setAttribute("d", IVY_LEAF);
+    leaf.setAttribute("class", "ivy-leaf v" + (1 + Math.floor(rnd() * 3)));
+    leaf.style.scale = size.toFixed(2);
+    // Своё покачивание у каждого листа: амплитуда, период и фаза
+    leaf.style.setProperty("--sway", (3 + rnd() * 6).toFixed(1) + "deg");
+    leaf.style.setProperty("--sway-t", (2.6 + rnd() * 3.2).toFixed(2) + "s");
+    leaf.style.setProperty("--sway-d", (-rnd() * 5).toFixed(2) + "s");
+    g.appendChild(leaf);
+    leaves.appendChild(g);
+    items.push({ el: leaf, kind: "leaf", size, start });
+  }
+  function addStem(pts, start, dur, cls) {
+    const path = document.createElementNS(NS, "path");
+    path.setAttribute("d", samplesToPath(pts));
+    path.setAttribute("class", "ivy-stem " + cls);
+    stems.appendChild(path);
+    // Длина по самой волнистой линии: она длиннее исходной ломаной, и с «прямой» длиной
+    // пунктир повторялся — в конце стеблей сразу торчали кусочки
+    const len = Math.ceil(path.getTotalLength()) + 2;
+    items.push({ el: path, kind: "stem", len, start, dur });
+  }
+  // Клематис у тех, кого уже нет: известен год смерти или родился больше 100 лет назад.
+  // Белый — у женщин, синий — у мужчин. Распускается, когда побег обвил карточку
+  function blooms(p) {
+    const by = firstYear(p.born);
+    return !!(p.died && String(p.died).trim()) || (by && NOW - by > 100);
+  }
+  function addFlowers(n, b, g) {
+    const rnd = seeded("f" + n.id);
+    const count = 2 + (rnd() < 0.6 ? 1 : 0) + (n.depth >= 3 ? 1 : 0) + (n.depth >= 5 && rnd() < 0.6 ? 1 : 0);
+    const cx = b.x + b.w / 2, cy = b.y + b.h / 2;
+    const last = g.pts[g.pts.length - 1].d;
+    for (let i = 0; i < count; i++) {
+      const frac = (i + 0.35 + rnd() * 0.4) / count;
+      const p = g.pts.find(q => q.d >= frac * last) || g.pts[g.pts.length - 1];
+      // Чуть наружу от карточки, чтобы цветок сидел на плюще, а не на тексте
+      const dx = p.x - cx, dy = p.y - cy, dl = Math.hypot(dx, dy) || 1;
+      const x = p.x + dx / dl * 6, y = p.y + dy / dl * 6;
+      const outer = document.createElementNS(NS, "g");
+      outer.setAttribute("transform", `translate(${x.toFixed(1)} ${y.toFixed(1)}) rotate(${(rnd() * 60).toFixed(0)})`);
+      const f = document.createElementNS(NS, "g");
+      f.setAttribute("class", "ivy-flower " + (n.p.sex === "f" ? "f" : "m"));
+      const petals = 6 + (rnd() < 0.3 ? -2 : 0);
+      for (let k = 0; k < petals; k++) {
+        const pe = document.createElementNS(NS, "path");
+        pe.setAttribute("d", CLEMATIS_PETAL);
+        pe.setAttribute("class", "petal");
+        pe.setAttribute("transform", `rotate(${(k * 360 / petals).toFixed(1)})`);
+        f.appendChild(pe);
+      }
+      const c = document.createElementNS(NS, "circle");
+      c.setAttribute("r", "2.6"); c.setAttribute("class", "eye");
+      f.appendChild(c);
+      for (let k = 0; k < 7; k++) {
+        const a = k / 7 * Math.PI * 2 + rnd();
+        const st = document.createElementNS(NS, "circle");
+        st.setAttribute("cx", (Math.cos(a) * 3.6).toFixed(1)); st.setAttribute("cy", (Math.sin(a) * 3.6).toFixed(1));
+        st.setAttribute("r", ".75"); st.setAttribute("class", "stamen");
+        f.appendChild(st);
+      }
+      const size = 1.05 + rnd() * 0.4;
+      f.style.scale = size.toFixed(2);
+      f.style.setProperty("--sway", (2 + rnd() * 3).toFixed(1) + "deg");
+      f.style.setProperty("--sway-t", (4 + rnd() * 3).toFixed(2) + "s");
+      f.style.setProperty("--sway-d", (-rnd() * 6).toFixed(2) + "s");
+      outer.appendChild(f);
+      flowers.appendChild(outer);
+      items.push({ el: f, kind: "flower", size, start: g.start + g.dur * (0.6 + frac * 0.4) + 250 });
+    }
+  }
+  // Усик: короткий боковой побег, закручивается к концу, на нём 1–3 листа
+  function tendril(p, q, side, start, rnd) {
+    let ang = Math.atan2(p.y - q.y, p.x - q.x) + side * (0.9 + rnd() * 0.6);
+    const len = 16 + rnd() * 30, step = 3;
+    let curl = 0.02 + rnd() * 0.04;
+    const pts = [{ x: p.x, y: p.y, d: 0 }];
+    let x = p.x, y = p.y, d = 0;
+    while (d < len) {
+      ang += side * curl;
+      curl *= 1.09;                       // к концу закрутка сильнее — получается завиток
+      x += Math.cos(ang) * step; y += Math.sin(ang) * step; d += step;
+      pts.push({ x, y, d });
+    }
+    // Усик, который залез бы на текст карточки, не рисуем
+    if (pts.some((q, i) => i > 2 && overCard(q.x, q.y))) return;
+    const dur = len / 120 * 1000;
+    addStem(pts, start, dur, "tendril");
+    const n = 1 + Math.floor(rnd() * 3);
+    for (let i = 0; i < n; i++) {
+      const at = Math.min(pts.length - 2, Math.floor((0.3 + i * 0.28 + rnd() * 0.1) * pts.length));
+      const a = pts[at], b = pts[at + 1];
+      const ta = Math.atan2(b.y - a.y, b.x - a.x) * 180 / Math.PI + 90 + (i % 2 ? 1 : -1) * (50 + rnd() * 30);
+      addLeaf(a.x, a.y, ta, 0.55 + rnd() * 0.45, start + (a.d / len) * dur + 40, rnd);
+    }
+  }
+  function grow(poly, start, key, opts) {
+    const rnd = seeded(key);
+    const pts = vineSamples(poly, opts.amp, opts.period, rnd);
+    if (pts.length < 2) return start;
+    const len = pts[pts.length - 1].d;
+    const dur = Math.max(260, len / SPEED * 1000);
+    addStem(pts, start, dur, "main");
+    lastGrow = { pts, start, dur };
+    // Дополнительные стебли в противофазе — побеги переплетаются, как у настоящего плюща
+    for (let i = 0; i < (opts.twins || 0); i++) {
+      const twin = vineSamples(poly, opts.amp * (0.8 + i * 0.35), opts.period * (1.37 + i * 0.41), rnd);
+      addStem(twin, start + 120 * (i + 1), dur, "twin");
+    }
+    const at = s => { const i = Math.max(1, pts.findIndex(p => p.d >= s)); return [pts[i] || pts[pts.length - 1], pts[i - 1]]; };
+    // На обвивке листья и усики смотрят наружу, чтобы не закрывать текст карточки
+    const c = opts.center;
+    const outward = (p, deg) => !c || (Math.sin(deg * Math.PI / 180) * (p.x - c[0]) - Math.cos(deg * Math.PI / 180) * (p.y - c[1])) > 0;
+    // Листья: густо, попеременно по обе стороны, иногда парой из одного узла
+    let side = rnd() < .5 ? 1 : -1;
+    for (let s = 6 + rnd() * 8; s < len - 4; s += opts.gap * (0.6 + rnd() * 0.6)) {
+      const [p, q] = at(s);
+      const base = Math.atan2(p.y - q.y, p.x - q.x) * 180 / Math.PI + 90;
+      const t = start + s / len * dur + 50;
+      const off = 50 + rnd() * 35;
+      let a = base + side * off;
+      if (!outward(p, a)) a = base - side * off;
+      addLeaf(p.x, p.y, a, opts.leaf / 10 * (0.65 + rnd() * 0.7), t, rnd);
+      const a2 = base - side * (40 + rnd() * 40);
+      if (rnd() < 0.3 && outward(p, a2)) addLeaf(p.x, p.y, a2, opts.leaf / 10 * (0.5 + rnd() * 0.4), t + 90, rnd);
+      side = -side;
+    }
+    // Боковые побеги
+    for (let s = 20 + rnd() * 30; s < len - 10; s += opts.branch * (0.7 + rnd() * 0.8)) {
+      const [p, q] = at(s);
+      let sd = rnd() < .5 ? 1 : -1;
+      if (c) {
+        const ta = Math.atan2(p.y - q.y, p.x - q.x) + sd * 1.2;
+        if (Math.cos(ta) * (p.x - c[0]) + Math.sin(ta) * (p.y - c[1]) < 0) sd = -sd;
+      }
+      tendril(p, q, sd, start + s / len * dur, rnd);
+    }
+    return start + dur;
+  }
+
+  // Обход древа: обвить карточку, затем от неё — побеги к родителям
+  (function visit(n, t) {
+    if (!n.p || !n.el) return;
+    const b = boxOf(n.el);
+    const isRoot = n.depth === 0;
+    // Чем старше поколение, тем гуще: больше листьев, усиков, стеблей и плотнее обвивка
+    const dense = d => ({
+      f: 1 + 0.24 * d,
+      leaf: Math.min(1.3, 0.82 + 0.06 * d),
+      twins: d < 2 ? 0 : d < 5 ? 1 : 2,
+    });
+    const dn = dense(n.depth);
+    const wrapEnd = grow(wrapPoly(b, isRoot ? exitSide : enterSide, isRoot ? 0.6 : Math.min(1, 0.45 + 0.09 * n.depth)), t, "w" + n.id,
+      { amp: 2.4 + 0.15 * n.depth, period: 26, gap: 24 / dn.f, leaf: 9.5 * dn.leaf, branch: 95 / dn.f, twins: dn.twins,
+        center: [b.x + b.w / 2, b.y + b.h / 2] });
+    const branchAt = t + (wrapEnd - t) * 0.45;
+    if (lastGrow && blooms(n.p)) addFlowers(n, b, lastGrow);
+    for (const k of n.kids) {
+      if (!k.p || !k.el) continue;
+      const kb = boxOf(k.el);
+      const [sx, sy] = mid(b, exitSide), [ex, ey] = mid(kb, enterSide);
+      const poly = dir === "lr"
+        ? [[sx, sy], [(sx + ex) / 2, sy], [(sx + ex) / 2, ey], [ex, ey]]
+        : [[sx, sy], [sx, (sy + ey) / 2], [ex, (sy + ey) / 2], [ex, ey]];
+      const dk = dense(k.depth);
+      const arrive = grow(poly, branchAt, "e" + k.id,
+        { amp: 3 + 0.2 * k.depth, period: 34, gap: 22 / dk.f, leaf: 11 * dk.leaf, branch: 80 / dk.f, twins: dk.twins });
+      visit(k, arrive);
+    }
+  })(rootNode, 0);
+
+  if (!motion) {
+    if (animate) svg.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 400 });
+    if (!reduceMotion()) svg.classList.add("alive");
+    return;
+  }
+  let last = 0;
+  for (const it of items) {
+    if (it.kind === "stem") {
+      it.el.style.strokeDasharray = it.len;
+      it.el.animate([{ strokeDashoffset: it.len }, { strokeDashoffset: 0 }],
+        { duration: it.dur, delay: it.start, easing: "cubic-bezier(.35,.1,.45,1)", fill: "backwards" });
+      last = Math.max(last, it.start + it.dur);
+    } else if (it.kind === "flower") {
+      const s = it.size.toFixed(2);
+      // Распускается медленно и плавно: проявляется, разворачивается, без «пружины»
+      it.el.animate([
+        { scale: (it.size * 0.15).toFixed(2), rotate: "-35deg", opacity: 0 },
+        { opacity: 1, offset: 0.4 },
+        { scale: s, rotate: "0deg", opacity: 1 },
+      ], { duration: 1800, delay: it.start, easing: "cubic-bezier(0.22, 1, 0.36, 1)", fill: "backwards" });
+      last = Math.max(last, it.start + 1800);
+    } else {
+      const s = it.size.toFixed(2);
+      it.el.animate([
+        { scale: "0", rotate: "-40deg", opacity: 0 },
+        { scale: (it.size * 1.12).toFixed(2), rotate: "6deg", opacity: 1, offset: 0.7 },
+        { scale: s, rotate: "0deg", opacity: 1 },
+      ], { duration: 560, delay: it.start, easing: "cubic-bezier(0.16, 1, 0.3, 1)", fill: "backwards" });
+      last = Math.max(last, it.start + 560);
+    }
+  }
+  // Когда всё выросло — плющ «оживает»: листья покачиваются, будто от ветра
+  const svgRef = svg;
+  setTimeout(() => { if (ivy.svg === svgRef) svgRef.classList.add("alive"); }, last + 100);
+}
+function removeIvy(fade) {
+  const svg = ivy.svg;
+  ivy.svg = null;
+  if (!svg) return;
+  if (fade && !reduceMotion()) svg.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 350 }).onfinish = () => svg.remove();
+  else svg.remove();
+}
+function syncIvyBtn() {
+  const b = $("ivy-btn");
+  b.setAttribute("aria-pressed", String(ivy.on));
+  b.title = ivy.on ? "Убрать плющ" : "Вырастить плющ по древу";
+  b.setAttribute("aria-label", b.title);
+}
+$("ivy-btn").addEventListener("click", () => {
+  ivy.on = !ivy.on;
+  syncIvyBtn();
+  if (!ivy.on) { removeIvy(true); return; }
+  if (viewMode() !== "tree") { ivy.pending = true; prefs.mode = "tree"; savePrefs(); render(); return; }
+  $("tree-wrap").scrollIntoView({ block: "start", behavior: reduceMotion() ? "auto" : "smooth" });
+  drawIvy(true);
+});
+
+// ─── Вид «По одному» ──────────────────────────────────────────────────────
+function navButton(n, kind) {
+  const b = document.createElement("button");
+  b.type = "button";
+  const k = document.createElement("span"), v = document.createElement("span");
+  k.className = "k"; v.className = "v";
+  if (n.p) {
+    b.className = `nav-btn ${n.sex}`;
+    k.textContent = kind;
+    v.textContent = displayName(n.p);
+    b.addEventListener("click", () => setFocus(n.id));
+  } else {
+    b.className = "nav-btn ph";
+    k.textContent = kind;
+    v.textContent = editing() ? "+ Добавить" : "Неизвестно";
+    const hasAsks = asksFor(nodeKey(n)).length > 0;
+    if (editing() || hasAsks) b.addEventListener("click", () => activate(nodeKey(n)));
+    else b.disabled = true;
+  }
+  b.append(k, v);
+  const open = openAsksFor(nodeKey(n)).length;
+  if (open) {
+    const dot = document.createElement("span");
+    dot.className = "ask-dot";
+    dot.textContent = "?";
+    dot.title = "Есть вопрос к семье";
+    b.appendChild(dot);
+  }
+  return b;
+}
+
+function renderCardView() {
+  const rootNode = buildTree(true);
+  if (!people[focusId]) focusId = ROOT;
+  const n = findNode(rootNode, focusId) || rootNode;
+
+  // Родители
+  const parentsBox = $("cv-parents");
+  parentsBox.innerHTML = "";
+  const kids = n.kids.length ? n.kids : [];
+  for (const k of kids) parentsBox.appendChild(navButton(k, k.sex === "m" ? "Отец" : "Мать"));
+
+  // Сама карточка
+  const card = $("cv-card");
+  card.className = `cv-card ${n.sex}` + (cvDir ? " " + cvDir : "");
+  cvDir = null;
+  card.innerHTML = "";
+  const role = document.createElement("div");
+  role.className = "cv-label";
+  role.textContent = roleOf(n.path, n.sex) || "Главный человек древа";
+  const h = document.createElement("h2");
+  h.textContent = displayName(n.p);
+  const meta = document.createElement("div");
+  meta.className = "cv-meta";
+  meta.textContent = [datesOf(n.p), n.p.place].filter(Boolean).join(" · ");
+  const big = photoImg(n.p);
+  if (big) card.appendChild(big);
+  card.append(role, h, meta);
+  if (n.p.notes) {
+    const notes = document.createElement("div");
+    notes.className = "cv-notes";
+    notes.append(linkify(n.p.notes));
+    card.appendChild(notes);
+  }
+  const sibs = sibsBlock(n);
+  if (sibs) card.appendChild(sibs);
+  // Вопросы к семье: по самому человеку и по его неизвестным родителям
+  const askTargets = [[n.id, displayName(n.p)], ...n.kids.filter(k => !k.p).map(k => [nodeKey(k), slotTitle(k)])];
+  const askRows = askTargets.flatMap(([key, title]) => openAsksFor(key).map(x => ({ key, title, a: x.a })));
+  if (askRows.length) {
+    const box = document.createElement("div");
+    box.className = "cv-asks";
+    const k = document.createElement("div");
+    k.className = "k";
+    k.textContent = "Нужно узнать у семьи";
+    box.appendChild(k);
+    for (const r of askRows) {
+      const row = document.createElement("div");
+      row.className = "cv-ask";
+      const who = document.createElement("div");
+      who.className = "who";
+      who.textContent = r.title;
+      const q = document.createElement("div");
+      q.className = "q";
+      q.append(linkify(r.a.question || ""));
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "btn";
+      btn.textContent = canWrite ? "Ответить" : "Подробнее";
+      btn.addEventListener("click", () => openDrawer(r.key, { from: "nav" }));
+      row.append(who, q, btn);
+      box.appendChild(row);
+    }
+    card.appendChild(box);
+  }
+  const actions = document.createElement("div");
+  actions.className = "actions";
+  const edit = document.createElement("button");
+  edit.type = "button";
+  edit.className = "btn primary";
+  edit.textContent = editing() ? "Изменить" : "Журнал и источники";
+  edit.addEventListener("click", () => openDrawer(n.id, { from: "nav" }));
+  actions.appendChild(edit);
+  card.appendChild(actions);
+
+  // Ребёнок (на поколение ниже)
+  const childBox = $("cv-child");
+  childBox.innerHTML = "";
+  if (n.childId && people[n.childId]) {
+    const label = document.createElement("div");
+    label.className = "cv-label";
+    label.textContent = "↓ Ребёнок";
+    const childNode = findNode(rootNode, n.childId);
+    const btn = navButton(childNode, roleOf(childNode.path, childNode.sex) || "Главный человек древа");
+    btn.style.width = "100%";
+    childBox.append(label, btn);
+  }
+
+  renderMinimap(n.id);
+}
+
+function renderMinimap(currentId) {
+  const svg = $("minimap");
+  svg.innerHTML = "";
+  const rootNode = buildTree(false);
+  const dir = prefs.dir, vertical = dir !== "lr";
+  const { totalB, totalD } = layout(rootNode, () => ({ b: 10, d: 10 }), 6, vertical ? 16 : 22);
+  const W = vertical ? totalB : totalD, H = vertical ? totalD : totalB;
+  const xy = mapper(dir, H);
+  const pad = 10;
+  svg.setAttribute("viewBox", `${-pad} ${-pad} ${W + 2 * pad} ${H + 2 * pad}`);
+  const NS = "http://www.w3.org/2000/svg";
+  const center = n => xy(n.cb, n.d0 + 5);
+  walk(rootNode, n => {
+    for (const k of n.kids) {
+      const [x1, y1] = center(n), [x2, y2] = center(k);
+      const l = document.createElementNS(NS, "line");
+      l.setAttribute("class", "mm-line");
+      l.setAttribute("x1", x1); l.setAttribute("y1", y1); l.setAttribute("x2", x2); l.setAttribute("y2", y2);
+      svg.appendChild(l);
+    }
+  });
+  walk(rootNode, n => {
+    const [cx, cy] = center(n);
+    const dot = document.createElementNS(NS, "circle");
+    dot.setAttribute("class", `mm-dot ${n.sex}`);
+    dot.setAttribute("cx", cx); dot.setAttribute("cy", cy); dot.setAttribute("r", 4);
+    svg.appendChild(dot);
+    if (n.id === currentId) {
+      const ring = document.createElementNS(NS, "circle");
+      ring.setAttribute("class", "mm-cur");
+      ring.setAttribute("cx", cx); ring.setAttribute("cy", cy); ring.setAttribute("r", 7.5);
+      svg.appendChild(ring);
+    }
+    const hit = document.createElementNS(NS, "circle");
+    hit.setAttribute("class", "mm-hit");
+    hit.setAttribute("cx", cx); hit.setAttribute("cy", cy); hit.setAttribute("r", 9);
+    const title = document.createElementNS(NS, "title");
+    title.textContent = displayName(n.p);
+    hit.appendChild(title);
+    hit.addEventListener("click", () => setFocus(n.id));
+    svg.appendChild(hit);
+  });
+}
+
+// ─── Вид «Время» ──────────────────────────────────────────────────────────
+// events/<id>: { year, end?, title, scope: world|country|region|place, where?, text?, source? }
+let events = [];
+const SCOPES = ["world", "country", "region", "place"];
+const SCOPE_LABEL = { world: "Мир", country: "Россия / СССР", region: "Регион", place: "Сёла и города семьи" };
+const firstYear = s => { const m = String(s || "").match(/\d{4}/); return m ? +m[0] : null; };
+const NOW = new Date().getFullYear();
+
+// Порядок строк: как в древе (человек, затем его братья и сёстры), потом все остальные
+function timelineRows() {
+  const rows = [], seen = new Set();
+  const add = (id, label, sib) => {
+    if (seen.has(id) || !people[id]) return;
+    seen.add(id);
+    rows.push({ id, p: people[id], label, sib });
+  };
+  walk(buildTree(false), n => {
+    if (!n.p) return;
+    add(n.id, roleOf(n.path, n.sex) || "Главный человек древа", false);
+    if (prefs.sibs) for (const sid of siblingsOf(n.id)) add(sid, `${people[sid].sex === "f" ? "Сестра" : "Брат"}: ${displayName(n.p)}`, true);
+  });
+  if (prefs.sibs) for (const id of Object.keys(people)) add(id, "", true);
+  return rows;
+}
+
+// Раскладка подписей по дорожкам, чтобы не налезали друг на друга
+function lanes(items, start, end) {
+  const ends = [];
+  for (const it of items.sort((a, b) => start(a) - start(b))) {
+    let k = ends.findIndex(e => e <= start(it));
+    if (k < 0) { k = ends.length; ends.push(0); }
+    ends[k] = end(it) + 6;
+    it.lane = k;
+  }
+  return ends.length;
+}
+
+// Пояснение к событию: всплывает рядом, закрывается кликом в любом другом месте
+function openEvent(e, anchor) {
+  const pop = $("ev-pop");
+  pop.innerHTML = "";
+  pop.className = "ev-pop ev-" + e.scope;
+  const yrs = e.end && e.end !== e.year ? `${e.year}–${e.end}` : String(e.year);
+  const sub = document.createElement("div");
+  sub.className = "ev-sub";
+  sub.textContent = [yrs, SCOPE_LABEL[e.scope], e.where].filter(Boolean).join(" · ");
+  const h = document.createElement("div");
+  h.className = "ev-h";
+  h.textContent = e.title;
+  pop.append(sub, h);
+  const body = [e.text, e.source].filter(Boolean).join("\n\n");
+  if (body) {
+    const t = document.createElement("div");
+    t.className = "ev-text";
+    t.append(linkify(body));
+    pop.appendChild(t);
+  }
+  const b = document.createElement("button");
+  b.type = "button";
+  b.className = "btn ev-show";
+  b.textContent = tlFocus === e.id ? "Снять выделение" : "Выделить на линии";
+  b.addEventListener("click", () => { closeEventPop(); focusEvent(tlFocus === e.id ? null : e.id); });
+  pop.appendChild(b);
+  const r = anchor.getBoundingClientRect();
+  const w = Math.min(360, innerWidth - 24);
+  pop.style.width = w + "px";
+  pop.style.left = Math.max(12, Math.min(innerWidth - w - 12, r.left)) + "px";
+  pop.style.top = "0px";
+  pop.hidden = false;
+  const ph = pop.offsetHeight;
+  const below = r.bottom + 8;
+  pop.style.top = (below + ph < innerHeight - 8 ? below : Math.max(8, r.top - ph - 8)) + "px";
+  pop.classList.remove("show"); void pop.offsetWidth; pop.classList.add("show");
+}
+function closeEventPop() { $("ev-pop").hidden = true; }
+document.addEventListener("pointerdown", e => {
+  const pop = $("ev-pop");
+  if (!pop.hidden && !pop.contains(e.target) && !e.target.closest(".tl-ev-text")) closeEventPop();
+});
+addEventListener("scroll", e => { if (!$("ev-pop").contains(e.target)) closeEventPop(); }, true);
+
+// Выделение события: шапка сворачивается до него, на линии — яркая полоса или линия
+let tlFocus = null, tlGrow = true, tlHeadH = null;
+function focusEvent(id) {
+  tlFocus = id;
+  render();
+}
+$("tl-collapse").addEventListener("click", () => {
+  if (tlFocus) { tlFocus = null; prefs.tlCollapsed = false; }
+  else prefs.tlCollapsed = !prefs.tlCollapsed;
+  savePrefs();
+  render();
+});
+
+function renderTimeline() {
+  const scroll = $("tl-scroll");
+  const keepLeft = scroll.dataset.ready ? scroll.scrollLeft : null;
+  const keepTop = scroll.dataset.ready ? scroll.scrollTop : null;
+  scroll.innerHTML = "";
+  const rows = timelineRows().map(r => {
+    const b = firstYear(r.p.born);
+    let d = firstYear(r.p.died), openEnd = false;
+    if (b && !d) { if (b >= 1935) d = NOW; else { d = Math.min(NOW, b + 60); openEnd = true; } }
+    return { ...r, b, d, openEnd };
+  });
+  const dated = rows.filter(r => r.b);
+  const undated = rows.length - dated.length;
+  $("tl-note").textContent = undated ? `Без года рождения не показаны: ${undated}` : "";
+  if (!dated.length) { scroll.textContent = "Пока нет людей с известным годом рождения."; return; }
+
+  const y0 = Math.floor((Math.min(...dated.map(r => r.b)) - 10) / 10) * 10;
+  const y1 = Math.ceil((NOW + 4) / 10) * 10;
+  const PX = isNarrow() ? 5 : 7, PADL = 16;
+  const X = y => PADL + (y - y0) * PX;
+  const W = X(y1) + 16;
+
+  const on = prefs.tl || {};
+  const all = events.filter(e => (e.end || e.year) >= y0 && e.year <= y1);
+  const focused = all.find(e => e.id === tlFocus) || null;
+  if (tlFocus && !focused) tlFocus = null;
+  const evs = all.filter(e => on[e.scope] !== false || e === focused);
+  const isPeriod = e => e.end && e.end > e.year;
+  // В шапке: всё, только выделенное или ничего (свёрнуто)
+  const shown = focused ? [focused] : prefs.tlCollapsed ? [] : evs;
+  const periods = shown.filter(isPeriod).map(e => ({ ...e }));
+  const points = shown.filter(e => !isPeriod(e)).map(e => ({ ...e }));
+  const pText = e => `${e.title} · ${e.year}–${e.end}`;
+  const tPx = t => t.length * 6.3 + 12;
+  for (const e of periods) e.from = Math.max(e.year, y0);
+  const pLanes = lanes(periods, e => X(e.from), e => Math.max(X(e.end), X(e.from) + tPx(pText(e))));
+  const label = e => `${e.year} ${e.title}`;
+  const eLanes = lanes(points, e => X(e.year) - 6, e => X(e.year) + 10 + tPx(label(e)));
+
+  const AXIS = 22, PLANE = 26, ELANE = 20;
+  const headH = AXIS + pLanes * PLANE + eLanes * ELANE + (shown.length ? 8 : 0);
+  const ROW = 24, bodyH = dated.length * ROW + 16;
+  const btn = $("tl-collapse");
+  btn.textContent = focused ? "Показать все события" : prefs.tlCollapsed ? "Показать события" : "Свернуть события";
+  btn.setAttribute("aria-expanded", String(!focused && !prefs.tlCollapsed));
+
+  const canvas = document.createElement("div");
+  canvas.className = "tl-canvas";
+  canvas.style.width = W + "px";
+  const head = document.createElement("div"), body = document.createElement("div");
+  head.className = "tl-head"; body.className = "tl-body" + (focused ? " has-focus" : "");
+  head.style.width = body.style.width = W + "px";
+  head.style.height = headH + "px"; body.style.height = bodyH + "px";
+  canvas.append(head, body);
+  const put = (parent, el, x, y, w) => {
+    el.style.left = x + "px";
+    if (y != null) el.style.top = y + "px";
+    if (w != null) el.style.width = w + "px";
+    parent.appendChild(el);
+    return el;
+  };
+  const mk = (tag, cls, text) => { const el = document.createElement(tag); el.className = cls; if (text != null) el.textContent = text; if (tag === "button") el.type = "button"; return el; };
+
+  for (let y = y0; y <= y1; y += 10) {
+    if (y % 50 === 0 || PX >= 7) put(head, mk("div", "tl-tick", y), X(y), 3);
+    put(body, mk("div", "tl-grid" + (y % 100 === 0 ? " century" : "")), X(y));
+    if (y % 50 === 0) for (let top = 2; top < bodyH - 20; top += 12 * ROW) put(body, mk("div", "tl-tick tl-yr", y), X(y), top);
+  }
+
+  // Подложка под строками людей: короткие потрясения слегка, выделенное — ярко
+  for (const e of evs) {
+    const cls = "ev-" + e.scope + (e === focused ? " focus" : "");
+    if (isPeriod(e)) {
+      if (e === focused || e.end - e.year <= 15) {
+        const from = Math.max(e.year, y0);
+        put(body, mk("div", "tl-band " + cls), X(from), null, (e.end - from) * PX);
+      }
+    } else put(body, mk("div", "tl-line " + cls), X(e.year));
+  }
+
+  // Шапка: полоска периода и точка события выделяют, подпись открывает пояснение
+  for (const e of periods) {
+    const cls = "ev-" + e.scope + (focused ? " focus" : "");
+    const y = AXIS + e.lane * PLANE;
+    const bar = mk("button", "tl-pbar " + cls);
+    bar.title = focused ? "Снять выделение" : "Выделить на линии: " + pText(e);
+    bar.setAttribute("aria-pressed", String(!!focused));
+    bar.addEventListener("click", () => focusEvent(focused ? null : e.id));
+    put(head, bar, X(e.from), y + 15, Math.max(6, (e.end - e.from) * PX));
+    const t = mk("button", "tl-ev-text " + cls, pText(e));
+    t.addEventListener("click", () => openEvent(e, t));
+    put(head, t, X(e.from), y);
+  }
+  for (const e of points) {
+    const cls = "ev-" + e.scope + (focused ? " focus" : "");
+    const y = AXIS + pLanes * PLANE + e.lane * ELANE + 2;
+    const dot = mk("button", "tl-dot " + cls);
+    dot.title = focused ? "Снять выделение" : "Выделить на линии: " + label(e);
+    dot.setAttribute("aria-pressed", String(!!focused));
+    dot.addEventListener("click", () => focusEvent(focused ? null : e.id));
+    put(head, dot, X(e.year) - 7, y + 2);
+    const t = mk("button", "tl-ev-text " + cls);
+    const yb = mk("b", "", e.year);
+    t.append(yb, " " + e.title);
+    t.addEventListener("click", () => openEvent(e, t));
+    put(head, t, X(e.year) + 9, y);
+  }
+
+  // Люди
+  const bars = [];
+  dated.forEach((r, i) => {
+    const b = mk("button", `tl-bar ${r.p.sex || ""}${r.openEnd ? " open-end" : ""}${r.sib ? " is-sib" : ""}`);
+    b.dataset.k = r.id;
+    b.dataset.role = r.label;
+    b.append(displayName(r.p));
+    b.appendChild(mk("span", "yrs", r.openEnd ? `${r.p.born} – ?` : datesOf(r.p).replace(/^род\. /, "")));
+    b.setAttribute("aria-label", [r.label, displayName(r.p), datesOf(r.p)].filter(Boolean).join(", "));
+    b.addEventListener("click", () => activate(r.id, r.label));
+    put(body, b, X(r.b), 8 + i * ROW, Math.max(6, (r.d - r.b) * PX));
+    bars.push(b);
+  });
+  scroll.appendChild(canvas);
+  markSelected(false);
+
+  // Движение: шапка плавно меняет высоту при сворачивании и выделении; полосы жизней «растут» при входе в режим
+  if (!reduceMotion()) {
+    if (tlHeadH != null && tlHeadH !== headH) {
+      head.animate([{ height: tlHeadH + "px" }, { height: headH + "px" }], { duration: 300, easing: EASE });
+      head.style.overflow = "hidden";
+      setTimeout(() => { head.style.overflow = ""; }, 320);
+    }
+    if (tlGrow) {
+      bars.forEach((b, i) => b.animate([{ transform: "scaleX(0)", opacity: 0 }, { transform: "none", opacity: 1 }],
+        { duration: 520, delay: Math.min(i * 10, 300), easing: EASE, fill: "backwards" }));
+    }
+  }
+  tlGrow = false;
+  tlHeadH = headH;
+  requestAnimationFrame(() => {
+    scroll.scrollLeft = keepLeft != null ? keepLeft : Math.max(0, X(1880) - 40);
+    if (keepTop != null) scroll.scrollTop = keepTop;
+    scroll.dataset.ready = "1";
+    // Выделенное событие — в поле зрения
+    if (focused && keepLeft != null) {
+      const fx = X(Math.max(focused.year, y0));
+      if (fx < scroll.scrollLeft + 40 || fx > scroll.scrollLeft + scroll.clientWidth - 80)
+        scroll.scrollTo({ left: Math.max(0, fx - scroll.clientWidth / 3), behavior: reduceMotion() ? "auto" : "smooth" });
+    }
+  });
+}
+
+for (const cb of document.querySelectorAll("#tl-scopes input[data-scope]")) {
+  cb.addEventListener("change", () => {
+    prefs.tl = { ...(prefs.tl || {}), [cb.dataset.scope]: cb.checked };
+    savePrefs();
+    render();
+  });
+}
+
+let cvDir = null;
+function setFocus(id) {
+  // К родителю — новая карточка приходит сверху, к ребёнку — снизу
+  const from = people[focusId];
+  cvDir = from && (from.father === id || from.mother === id) ? "from-up" : (people[id] && (people[id].father === focusId || people[id].mother === focusId)) ? "from-down" : null;
+  focusId = id;
+  render();
+  $("card-view").scrollIntoView({ block: "start", behavior: "smooth" });
+}
+
+// ─── Общая отрисовка ──────────────────────────────────────────────────────
+function syncToolbar() {
+  const mode = viewMode();
+  for (const b of document.querySelectorAll("#mode-seg button")) b.setAttribute("aria-pressed", b.dataset.mode === mode);
+  for (const b of document.querySelectorAll("#dir-seg button")) b.setAttribute("aria-pressed", b.dataset.dir === prefs.dir);
+  $("opt-empty").checked = prefs.empty;
+  $("empty-wrap").hidden = !editing() || mode !== "tree";
+  $("edit-seg").hidden = !canWrite;
+  for (const b of document.querySelectorAll("#edit-seg button")) b.setAttribute("aria-pressed", String(b.dataset.edit === (editing() ? "1" : "0")));
+  $("hint").textContent = mode === "time"
+    ? "Жизни людей на фоне истории. Наведите на полосу — сведения о человеке, на событие — пояснение."
+    : editing()
+      ? "Режим правки: нажмите на карточку, чтобы исправить данные, на пунктирную — чтобы добавить человека."
+      : "Наведите на карточку — краткая справка. Нажмите — полная: источники, журнал поиска, вопросы к семье.";
+  $("opt-sibs").checked = prefs.sibs;
+  $("sibs-wrap").hidden = mode === "card";
+  $("dir-seg").hidden = mode === "time";
+  $("tl-scopes").hidden = mode !== "time";
+  for (const cb of document.querySelectorAll("#tl-scopes input[data-scope]")) cb.checked = (prefs.tl || {})[cb.dataset.scope] !== false;
+}
+
+function render() {
+  syncToolbar();
+  const mode = viewMode();
+  if (!people[ROOT]) {
+    $("card-view").hidden = true;
+    $("tree-wrap").hidden = false;
+    tree.innerHTML = "";
+    tree.style.width = "auto"; tree.style.height = "auto"; tree.style.zoom = 1;
+    const empty = document.createElement("div");
+    empty.className = "empty";
+    empty.textContent = loaded
+      ? "Древо пока пустое. Нажмите здесь, чтобы добавить главного человека."
+      : "Здесь появится древо, как только загрузятся данные.";
+    if (loaded && canWrite) {
+      empty.style.cursor = "pointer";
+      empty.addEventListener("click", () => openEditor({ id: ROOT, path: "", sex: "f" }));
+    }
+    tree.appendChild(empty);
+    return;
+  }
+  $("tree-wrap").hidden = mode !== "tree";
+  $("card-view").hidden = mode !== "card";
+  $("time-view").hidden = mode !== "time";
+  if (mode === "tree") renderTree();
+  else if (mode === "time") renderTimeline();
+  else renderCardView();
+}
+
+for (const b of document.querySelectorAll("#mode-seg button")) {
+  b.addEventListener("click", () => {
+    if (b.dataset.mode === viewMode()) return;
+    if (b.dataset.mode === "time") { tlGrow = true; tlHeadH = null; }
+    prefs.mode = b.dataset.mode; savePrefs(); hidePeek(); render();
+  });
+}
+for (const b of document.querySelectorAll("#edit-seg button")) {
+  b.addEventListener("click", () => {
+    prefs.edit = b.dataset.edit === "1"; savePrefs(); hidePeek(); render();
+    if (drawerKey) renderDrawer(false);
+  });
+}
+for (const b of document.querySelectorAll("#dir-seg button")) {
+  b.addEventListener("click", () => { prefs.dir = b.dataset.dir; savePrefs(); render(); });
+}
+$("opt-empty").addEventListener("change", e => { prefs.empty = e.target.checked; savePrefs(); render(); });
+$("opt-sibs").addEventListener("change", e => { prefs.sibs = e.target.checked; savePrefs(); render(); });
+
+
+// Справка «как пользоваться»: всплывает под «?», закрывается кликом вне неё
+function toggleHelp(show) {
+  const pop = $("help-pop"), btn = $("help-btn");
+  const open = show != null ? show : pop.hidden;
+  pop.hidden = !open;
+  btn.setAttribute("aria-expanded", String(open));
+}
+$("help-btn").addEventListener("click", () => toggleHelp());
+document.addEventListener("pointerdown", e => {
+  if (!$("help-pop").hidden && !e.target.closest("#help-pop, #help-btn")) toggleHelp(false);
+});
+document.addEventListener("keydown", e => { if (e.key === "Escape" && !$("help-pop").hidden) toggleHelp(false); });
+
+// ─── Редактор ─────────────────────────────────────────────────────────────
+let current = null, deleteArmed = false, photoRemoved = false;
+const FIELDS = ["name", "maiden", "born", "died", "place", "notes"];
+
+// Форма правки живёт в той же боковой панели, что и справка: древо остаётся видно
+let editorOpen = false;
+function showEditorPanel() {
+  const d = $("drawer");
+  const wasOpen = d.classList.contains("open");
+  editorOpen = true;
+  $("d-body").hidden = true;
+  $("editor").hidden = false;
+  $("d-edit").hidden = true;
+  $("d-back").disabled = !drawerKey;
+  $("d-crumb").textContent = "Правка";
+  const ed = $("editor");
+  ed.classList.remove("swap"); void ed.offsetWidth; ed.classList.add("swap");
+  ed.scrollTop = 0;
+  d.classList.add("open");
+  d.setAttribute("aria-hidden", "false");
+  document.body.classList.add("with-drawer");
+  if (!wasOpen) setTimeout(() => { if (viewMode() !== "card") render(); markSelected(false); }, 340);
+}
+function closeEditorPanel() {
+  if (!editorOpen) return;
+  editorOpen = false;
+  $("editor").hidden = true;
+  $("d-body").hidden = false;
+  // Пустое место заполнили — справка переходит на нового человека
+  if (drawerKey && drawerKey.startsWith("slot:")) {
+    const [, cid, rel] = drawerKey.split(":");
+    if (people[cid] && people[cid][rel] && people[people[cid][rel]]) drawerKey = people[cid][rel];
+  }
+  // Если правили из справки — возвращаемся к ней, иначе панель закрывается
+  if (drawerKey && (people[drawerKey] || drawerKey.startsWith("slot:"))) renderDrawer(true);
+  else closeDrawer();
+}
+
+function openEditor(slot) {
+  current = slot;
+  const p = slot.id ? people[slot.id] : null;
+  const sex = (p && p.sex) || slot.sex;
+  const role = slot.label || roleOf(slot.path || "", sex) || "Главный человек древа";
+  $("e-title").textContent = p ? displayName(p) : (slot.siblingOf ? "Добавить брата или сестру" : `Добавить: ${role.toLowerCase()}`);
+  $("e-sub").textContent = p ? role : (slot.siblingOf ? role : "Впишите то, что известно. Остальное можно добавить позже.");
+  for (const f of FIELDS) {
+    const el = $("f-" + f);
+    el.value = (p && p[f]) || "";
+    el.disabled = !canWrite;
+  }
+  $("sex-wrap").hidden = !slot.siblingOf;
+  $("f-sex").value = "m";
+  $("maiden-wrap").hidden = sex !== "f" && !slot.siblingOf;
+  $("e-save").hidden = !canWrite;
+  $("e-delete").hidden = !canWrite || !p || slot.id === ROOT;
+  $("e-delete").textContent = "Удалить";
+  deleteArmed = false;
+  $("e-error").hidden = true;
+  renderEditorLinks();
+  // Фото: загружать могут только те, у кого есть право редактировать древо
+  photoRemoved = false;
+  $("f-photo").value = "";
+  $("photo-wrap").hidden = !assets && !photoSrc(p);
+  $("f-photo").hidden = !assets;
+  const src = photoSrc(p);
+  setPhotoPreview(src);
+  $("e-photo-del").hidden = !src || !assets;
+  // Журнал поиска и вопросы к семье по этому человеку (или пустому месту)
+  const key = p ? slot.id : (slot.childId ? slotKey(slot.childId, slot.rel) : null);
+  const title = p ? displayName(p) : (slot.childId ? slotTitle(slot) : "");
+  const entries = key ? logFor(key) : [];
+  $("e-journal").hidden = !entries.length;
+  $("e-journal").open = false;
+  $("e-journal-sum").textContent = `Журнал поиска: что и где искали (${entries.length})`;
+  renderEntries($("e-journal-list"), entries);
+  const askList = key ? asksFor(key) : [];
+  const openN = askList.filter(x => x.a.status !== "answered").length;
+  $("e-asks").hidden = !askList.length;
+  $("e-asks").textContent = openN ? `Вопросы к семье: ${openN} — ответить` : "Вопросы к семье и ответы";
+  $("e-asks").onclick = () => { closeEditorPanel(); openDrawer(key, { from: "nav" }); };
+  showEditorPanel();
+  if (canWrite) $("f-name").focus();
+}
+
+function showError(msg) { $("e-error").textContent = msg; $("e-error").hidden = false; }
+
+$("e-cancel").addEventListener("click", () => closeEditorPanel());
+$("f-notes").addEventListener("input", renderEditorLinks);
+// Превью фото в редакторе: картинка создаётся только когда есть что показать
+function setPhotoPreview(src) {
+  const box = $("e-photo-box");
+  box.innerHTML = "";
+  if (!src) return;
+  const img = document.createElement("img");
+  img.className = "photo";
+  img.alt = "";
+  img.src = src;
+  box.appendChild(img);
+}
+$("e-photo-del").addEventListener("click", () => {
+  photoRemoved = true;
+  setPhotoPreview(null);
+  $("e-photo-del").hidden = true;
+});
+$("f-photo").addEventListener("change", () => {
+  const f = $("f-photo").files[0];
+  if (!f) return;
+  photoRemoved = false;
+  setPhotoPreview(URL.createObjectURL(f));
+});
+
+$("person-form").addEventListener("submit", async e => {
+  e.preventDefault();
+  if (!db || !current) return;
+  const data = {};
+  for (const f of FIELDS) data[f] = $("f-" + f).value.trim();
+  if (!data.name) { showError("Впишите хотя бы имя. Если известна только фамилия, напишите её."); return; }
+  $("e-save").disabled = true;
+  try {
+    const file = $("f-photo").files[0];
+    if (file && assets) {
+      try {
+        data.photo = (await assets.upload(file)).id;
+      } catch (err) {
+        showError(err && err.code === "too_large"
+          ? "Фото слишком большое: нужен файл до 20 МБ."
+          : "Фото не загрузилось. Остальное можно сохранить без него или попробовать ещё раз.");
+        return;
+      }
+    } else if (photoRemoved) {
+      data.photo = null;
+    }
+    if (current.id) {
+      await db.doc("people/" + current.id).update(data);
+    } else if (current.siblingOf) {
+      // Брат или сестра: те же родители, а если их нет в древе — прямая связь
+      const base = people[current.siblingOf] || {};
+      const hasParents = !!(base.father || base.mother);
+      await db.collection("people").doc().set({
+        ...data, sex: $("f-sex").value,
+        father: base.father || null, mother: base.mother || null,
+        siblingOf: hasParents ? null : current.siblingOf,
+        createdAt: new Date().toISOString(),
+      });
+    } else {
+      const ref = db.collection("people").doc();
+      await ref.set({ ...data, sex: current.sex, father: null, mother: null, createdAt: new Date().toISOString() });
+      await db.doc("people/" + current.childId).update({ [current.rel]: ref.id });
+    }
+    closeEditorPanel();
+  } catch (err) {
+    showError(err && err.code === "invalid_argument"
+      ? "Сохранить не получилось: у вас нет прав на изменение этого древа."
+      : "Сохранить не получилось. Проверьте связь и попробуйте ещё раз.");
+  } finally {
+    $("e-save").disabled = false;
+  }
+});
+
+$("e-delete").addEventListener("click", async () => {
+  if (!deleteArmed) {
+    deleteArmed = true;
+    $("e-delete").textContent = "Точно удалить?";
+    return;
+  }
+  const id = current.id;
+  try {
+    await deletePerson(id);
+    if (focusId === ROOT && current.childId) focusId = current.childId;
+    closeEditorPanel();
+  } catch {
+    showError("Удалить не получилось. Попробуйте ещё раз.");
+  }
+});
+
+// ─── Журнал ───────────────────────────────────────────────────────────────
+// Запись журнала может ссылаться на людей: log.people = [id человека или "slot:…"]
+let logAll = [];
+const logFor = key => logAll.filter(e => Array.isArray(e.people) && e.people.includes(key));
+// Журнал: свёрнут — видна одна запись, листается стрелками; развёрнут — все подряд
+let journalAll = [], jIdx = 0;
+function renderJournal(entries, dir) {
+  journalAll = entries;
+  const box = $("journal");
+  const collapsed = prefs.journalOpen !== true;
+  jIdx = Math.max(0, Math.min(jIdx, entries.length - 1));
+  $("j-toggle").textContent = collapsed ? "Показать все" : "Свернуть";
+  $("j-toggle").setAttribute("aria-expanded", String(!collapsed));
+  $("j-toggle").hidden = entries.length < 2;
+  $("j-nav").hidden = !collapsed || entries.length < 2;
+  $("j-count").textContent = !entries.length ? "" : collapsed ? `${jIdx + 1} из ${entries.length}` : `${entries.length}`;
+  $("j-prev").disabled = jIdx <= 0;
+  $("j-next").disabled = jIdx >= entries.length - 1;
+  if (!entries.length) {
+    box.innerHTML = "";
+    const d = document.createElement("div");
+    d.className = "entry";
+    d.textContent = "Записей пока нет.";
+    box.appendChild(d);
+    return;
+  }
+  renderEntries(box, collapsed ? [entries[jIdx]] : entries);
+  if (dir && !reduceMotion()) {
+    box.animate([{ opacity: 0, transform: `translateX(${dir * 18}px)` }, { opacity: 1, transform: "none" }],
+      { duration: 260, easing: "cubic-bezier(0.16, 1, 0.3, 1)" });
+  }
+}
+$("j-prev").addEventListener("click", () => { if (jIdx > 0) { jIdx--; renderJournal(journalAll, -1); } });
+$("j-next").addEventListener("click", () => { if (jIdx < journalAll.length - 1) { jIdx++; renderJournal(journalAll, 1); } });
+$("j-toggle").addEventListener("click", () => { prefs.journalOpen = prefs.journalOpen !== true; savePrefs(); renderJournal(journalAll); });
+function renderEntries(box, entries) {
+  box.innerHTML = "";
+  for (const en of entries) {
+    const d = document.createElement("div");
+    d.className = "entry";
+    const who = document.createElement("div");
+    who.className = "who";
+    const b = document.createElement("b");
+    b.textContent = en.author === "claude" ? "Claude" : "Семья";
+    who.append(b, " · " + (en.at ? new Date(en.at).toLocaleDateString("ru-RU", { day: "numeric", month: "long", year: "numeric" }) : ""));
+    const t = document.createElement("div");
+    t.className = "text";
+    t.append(linkify(en.text || ""));
+    d.append(who, t);
+    box.appendChild(d);
+  }
+}
+
+// ─── Запросы в архивы ─────────────────────────────────────────────────────
+const REQ_STATUS = [["draft", "Черновик"], ["sent", "Отправлен"], ["done", "Пришёл ответ"]];
+const openReqs = new Set();
+let reqEditing = false, reqPending = null;
+
+async function copyText(text, note, fallbackEl) {
+  try {
+    await navigator.clipboard.writeText(text);
+    note.textContent = "Скопировано.";
+  } catch {
+    if (fallbackEl) { fallbackEl.focus(); fallbackEl.select(); }
+    note.textContent = "Не получилось скопировать автоматически: текст выделен, нажмите Ctrl+C (⌘C).";
+  }
+}
+
+function renderRequests(list) {
+  if (reqEditing) { reqPending = list; return; }   // не мешаем, пока человек правит письмо
+  const box = $("requests");
+  box.innerHTML = "";
+  if (!list.length) {
+    const d = document.createElement("div");
+    d.className = "req-note";
+    d.textContent = "Писем пока нет.";
+    box.appendChild(d);
+    return;
+  }
+  for (const { id, r } of list) {
+    const det = document.createElement("details");
+    det.className = "req";
+    det.open = openReqs.has(id);
+    det.addEventListener("toggle", () => { if (det.open) openReqs.add(id); else openReqs.delete(id); });
+
+    const sum = document.createElement("summary");
+    const title = document.createElement("span");
+    title.className = "req-title";
+    title.textContent = r.title || "Запрос";
+    const pill = document.createElement("span");
+    const st = r.status || "draft";
+    pill.className = `pill ${st}`;
+    pill.textContent = (REQ_STATUS.find(s => s[0] === st) || REQ_STATUS[0])[1];
+    sum.append(title, pill);
+    det.appendChild(sum);
+
+    const body = document.createElement("div");
+    body.className = "req-body";
+    const meta = document.createElement("div");
+    meta.className = "req-meta";
+    for (const [k, v] of [["Куда", r.address], ["Как отправить", r.how], ["Что приложить", r.attachments], ["Зачем", r.why]]) {
+      if (!v) continue;
+      const kk = document.createElement("div"); kk.className = "k"; kk.textContent = k;
+      const vv = document.createElement("div"); vv.className = "v"; vv.append(linkify(v));
+      meta.append(kk, vv);
+    }
+    body.appendChild(meta);
+
+    const ta = document.createElement("textarea");
+    ta.value = r.body || "";
+    ta.readOnly = !canWrite;
+    ta.setAttribute("aria-label", "Текст письма");
+    ta.addEventListener("focus", () => { reqEditing = true; });
+    ta.addEventListener("blur", () => {
+      reqEditing = false;
+      if (reqPending && ta.value === (r.body || "")) { const l = reqPending; reqPending = null; renderRequests(l); }
+    });
+    body.appendChild(ta);
+
+    const note = document.createElement("div");
+    note.className = "req-note";
+    const actions = document.createElement("div");
+    actions.className = "actions";
+    const copy = document.createElement("button");
+    copy.type = "button"; copy.className = "btn primary"; copy.textContent = "Скопировать письмо";
+    copy.addEventListener("click", () => copyText(ta.value, note, ta));
+    actions.appendChild(copy);
+    if (r.address) {
+      const ca = document.createElement("button");
+      ca.type = "button"; ca.className = "btn"; ca.textContent = "Скопировать адрес";
+      ca.addEventListener("click", () => copyText(r.address, note, null));
+      actions.appendChild(ca);
+    }
+    if (canWrite) {
+      const save = document.createElement("button");
+      save.type = "button"; save.className = "btn"; save.textContent = "Сохранить"; save.disabled = true;
+      ta.addEventListener("input", () => { save.disabled = ta.value === (r.body || ""); note.textContent = save.disabled ? "" : "Есть несохранённые изменения."; });
+      save.addEventListener("click", async () => {
+        save.disabled = true;
+        try {
+          await db.doc("requests/" + id).update({ body: ta.value, editedAt: new Date().toISOString() });
+          note.textContent = "Сохранено.";
+          r.body = ta.value;
+        } catch {
+          save.disabled = false;
+          note.textContent = "Не сохранилось. Проверьте связь и нажмите ещё раз.";
+        }
+      });
+      const spacer = document.createElement("span"); spacer.className = "spacer";
+      const sel = document.createElement("select");
+      sel.setAttribute("aria-label", "Статус запроса");
+      for (const [v, label] of REQ_STATUS) {
+        const o = document.createElement("option"); o.value = v; o.textContent = label; sel.appendChild(o);
+      }
+      sel.value = st;
+      sel.addEventListener("change", async () => {
+        try { await db.doc("requests/" + id).update({ status: sel.value }); }
+        catch { note.textContent = "Статус не сохранился."; sel.value = st; }
+      });
+      actions.append(save, spacer, sel);
+    }
+    body.append(actions, note);
+    det.appendChild(body);
+    box.appendChild(det);
+  }
+}
+
+$("journal-form").addEventListener("submit", async e => {
+  e.preventDefault();
+  const text = $("j-text").value.trim();
+  if (!db || !text) return;
+  try {
+    await db.collection("log").add({ text, author: "family", at: new Date().toISOString() });
+    $("j-text").value = "";
+  } catch {
+    $("status").textContent = "Запись не сохранилась. Попробуйте ещё раз.";
+  }
+});
+
+// ─── Данные ───────────────────────────────────────────────────────────────
+(async () => {
+  db = makeStaticDb(window.__treeReady); canWrite = false;
+  $("journal-form").hidden = true;
+  $("status").innerHTML = 'Копия от 15.11.2026 · только чтение · <a href="https://claude.ai/artifact/VUhiUnYroXvzKT3tQKHGfU">оригинал</a>';
+  if (!db) {
+    $("status").textContent = "Данные древа недоступны в этом окне. Откройте страницу на claude.ai, войдя в свой аккаунт.";
+    $("journal-form").hidden = true;
+    $("requests").textContent = "Письма доступны на странице в claude.ai.";
+    canWrite = false;
+    loaded = true; render(); renderJournal([]);
+    return;
+  }
+  assets = null;
+  const user = null;
+  const can = user ? await user.can("data.write") : null;
+  if (can === false) {
+    canWrite = false;
+    $("journal-form").hidden = true;
+    $("status").textContent = "Режим просмотра: менять древо может только владелец.";
+  }
+
+  db.collection("people").onSnapshot(snap => {
+    people = {};
+    snap.docs.forEach(d => { people[d.id] = d.data(); });
+    loaded = true;
+    renderOpenAsks();
+    if (drawerKey) renderDrawer(false);
+    if (canWrite) {
+      const n = Object.keys(people).length;
+      $("status").textContent = n ? `${n} чел. в древе` : "";
+      $("status").title = "Изменения сохраняются сразу";
+    }
+    render();
+  }, () => { $("status").textContent = "Связь с данными прервалась. Обновите страницу."; });
+
+  db.collection("log").orderBy("at", "desc").onSnapshot(
+    snap => { logAll = snap.docs.map(d => d.data()); renderJournal(logAll); if (drawerKey) renderDrawer(false); },
+    () => {}
+  );
+  db.collection("events").onSnapshot(snap => {
+    events = snap.docs.map(d => ({ id: d.id, ...d.data() })).filter(e => e && e.year && e.title);
+    if (viewMode() === "time") render();
+  }, () => {});
+  db.collection("asks").onSnapshot(snap => {
+    asks = snap.docs.map(d => ({ id: d.id, a: d.data() }));
+    render();
+    renderOpenAsks();
+    if (drawerKey) renderDrawer(false);
+    refreshAsksDialog();
+  }, () => {});
+  db.collection("answers").orderBy("at").onSnapshot(snap => {
+    answersByAsk = {};
+    snap.docs.forEach(d => { const x = d.data(); (answersByAsk[x.askId] ||= []).push(x); });
+    if (drawerKey) renderDrawer(false);
+    refreshAsksDialog();
+  }, () => {});
+  db.collection("requests").orderBy("order").onSnapshot(
+    snap => renderRequests(snap.docs.map(d => ({ id: d.id, r: d.data() }))),
+    () => { $("requests").textContent = "Письма не загрузились. Обновите страницу."; }
+  );
+})();
+
+render();
+renderJournal([]);
+let resizeTimer;
+addEventListener("resize", () => { clearTimeout(resizeTimer); resizeTimer = setTimeout(render, 150); });
+</script>
+
+<script src="comments-config.js"></script>
+<script type="module" src="comments.js"></script>
+</body></html>
