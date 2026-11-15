@@ -133,7 +133,7 @@ async function api(method, op, { body, query = {}, raw = false } = {}) {
   url.search = new URLSearchParams({ op, ...query });
   const headers = {};
   const session = store.get(SESSION_KEY);
-  if (session) headers.Authorization = "Bearer " + session;
+  if (session) headers["X-Session"] = session;
   if (body) headers["Content-Type"] = "application/json";
   const r = await fetch(url, { method, headers, body: body && JSON.stringify(body) });
   if (!r.ok) {
