@@ -1,20 +1,11 @@
-// Комментарии к статической копии древа: вход по ссылке на email (Firebase Auth),
-// хранение в Firestore. Кто может читать и писать — решают правила Firestore
-// (список адресов хранится там, а не в этом публичном репозитории).
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import {
-  getAuth, onAuthStateChanged, signOut,
-  sendSignInLinkToEmail, isSignInWithEmailLink, signInWithEmailLink,
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-import {
-  getFirestore, collection, query, where, onSnapshot,
-  addDoc, deleteDoc, doc, serverTimestamp, getDoc, getDocs,
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-
-const cfg = window.COMMENTS_FIREBASE_CONFIG;
-const EMAIL_KEY = "cm-email-for-signin";
+// Закрытая копия древа и семейный чат. Вход по ссылке на email, данные древа,
+// фото и сообщения отдаёт функция в Яндекс Облаке (yc/function); кому открыт
+// доступ, решает список адресов в её настройках, а не этот публичный файл.
+const API = window.TREE_API_URL;
+const SESSION_KEY = "cm-session";
 const NAME_KEY = "cm-display-name";
 const GENERAL = "general";
+const POLL_MS = 30000;
 
 const store = {
   get: k => { try { return localStorage.getItem(k); } catch { return null; } },
@@ -104,8 +95,8 @@ function showImage(src, caption) {
   lightbox.showModal();
 }
 
-// Фото уменьшаем в браузере: хранятся прямо в Firestore (документ до 1 МБ),
-// поэтому не нужен платный Cloud Storage. 1600 px — текст писем ещё читается.
+// Фото уменьшаем в браузере перед отправкой (до ~1 МБ),
+// 1600 px — текст писем ещё читается.
 const MAX_SIDE = 1600, MAX_CHARS = 900000;
 async function shrinkImage(file) {
   const bmp = await createImageBitmap(file, { imageOrientation: "from-image" });
@@ -130,9 +121,40 @@ const generalBox = el("div");
 generalPanel.appendChild(generalBox);
 document.querySelector("main.info")?.appendChild(generalPanel);
 
-// ─── Состояние ───────────────────────────────────────────────────────────
-let auth = null, db = null, user = null;
-const threads = new Map(); // personId -> { box, unsub, items, error }
+
+// ─── Состояние и API ─────────────────────────────────────────────────────
+let user = null; // { email }
+const threads = new Map(); // personId -> { box, items, error, draft, image, loaded }
+
+class ApiError extends Error { constructor(status, code) { super(code); this.status = status; this.code = code; } }
+
+async function api(method, op, { body, query = {}, raw = false } = {}) {
+  const url = new URL(API);
+  url.search = new URLSearchParams({ op, ...query });
+  const headers = {};
+  const session = store.get(SESSION_KEY);
+  if (session) headers.Authorization = "Bearer " + session;
+  if (body) headers["Content-Type"] = "application/json";
+  const r = await fetch(url, { method, headers, body: body && JSON.stringify(body) });
+  if (!r.ok) {
+    let code = "server";
+    try { code = (await r.json()).error || code; } catch {}
+    throw new ApiError(r.status, code);
+  }
+  return raw ? r : r.json();
+}
+
+// Картинки отдаются только с токеном, поэтому грузим их fetch'ем и показываем через blob:
+const blobs = new Map();
+function imageUrl(kind, id) {
+  const key = kind + "/" + id;
+  if (!blobs.has(key)) {
+    blobs.set(key, api("GET", "image", { query: { kind, id }, raw: true })
+      .then(r => r.blob()).then(b => URL.createObjectURL(b))
+      .catch(e => { blobs.delete(key); throw e; }));
+  }
+  return blobs.get(key);
+}
 
 function ask({ title, text, label, type = "text", value = "", ok }) {
   $d("cm-d-title").textContent = title;
@@ -154,9 +176,8 @@ function displayName() {
   return store.get(NAME_KEY) || (user?.email || "").split("@")[0];
 }
 
-function fmtDate(ts) {
-  const d = ts?.toDate ? ts.toDate() : null;
-  return d ? d.toLocaleString("ru-RU", { day: "2-digit", month: "2-digit", year: "numeric", hour: "2-digit", minute: "2-digit" }) : "только что";
+function fmtDate(ms) {
+  return ms ? new Date(ms).toLocaleString("ru-RU", { day: "2-digit", month: "2-digit", year: "numeric", hour: "2-digit", minute: "2-digit" }) : "";
 }
 
 // ─── Ветка комментариев ──────────────────────────────────────────────────
@@ -165,41 +186,35 @@ function renderThread(personId) {
   if (!t) return;
   const { box } = t;
   box.innerHTML = "";
-  if (!cfg) { box.appendChild(el("div", "cm-note", "Комментарии ещё не настроены.")); return; }
-  if (!user) {
-    const p = el("div", "cm-note", "Чтобы читать и писать комментарии, ");
-    const a = el("button", "cm-del", "войдите по ссылке на email");
-    a.type = "button";
-    a.style.marginLeft = "0";
-    a.addEventListener("click", startSignIn);
-    p.append(a, ".");
-    box.appendChild(p);
-    return;
-  }
+  if (!user) return;
   if (t.error) { box.appendChild(el("div", "cm-err", t.error)); return; }
+  if (!t.loaded) { box.appendChild(el("div", "cm-note", "Загружаю…")); return; }
   const list = el("div", "cm-list");
-  const items = [...(t.items || [])].sort((a, b) => (a.createdAt?.toMillis?.() ?? Infinity) - (b.createdAt?.toMillis?.() ?? Infinity));
-  if (!items.length) list.appendChild(el("div", "cm-note", "Комментариев пока нет."));
+  const items = [...t.items].sort((a, b) => a.ts - b.ts);
+  if (!items.length) list.appendChild(el("div", "cm-note", "Сообщений пока нет."));
   for (const c of items) {
-    const it = el("div", "cm-item" + (c.authorEmail === user.email ? " mine" : ""));
+    const mine = c.email === user.email;
+    const it = el("div", "cm-item" + (mine ? " mine" : ""));
     const who = el("div", "who");
-    who.append(el("b", null, c.author || c.authorEmail), el("span", null, fmtDate(c.createdAt)));
-    if (c.authorEmail === user.email) {
+    who.append(el("b", null, c.author || c.email), el("span", null, fmtDate(c.ts)));
+    if (mine) {
       const del = el("button", "cm-del", "удалить");
       del.type = "button";
       del.addEventListener("click", async () => {
-        try { await deleteDoc(doc(db, "comments", c.id)); }
-        catch { alert("Не получилось удалить."); }
+        del.disabled = true;
+        try { await api("POST", "delete", { body: { person: personId, id: c.id } }); await refreshThread(personId); }
+        catch { del.disabled = false; del.textContent = "не удалилось"; }
       });
       who.appendChild(del);
     }
     it.appendChild(who);
     if (c.image) {
       const img = el("img");
-      img.src = c.image;
       img.alt = c.text || "Фото";
-      img.loading = "lazy";
-      img.addEventListener("click", () => showImage(c.image, c.text));
+      imageUrl("chat", c.image).then(src => {
+        img.src = src;
+        img.addEventListener("click", () => showImage(src, c.text));
+      }).catch(() => { img.alt = "фото не загрузилось"; });
       it.appendChild(img);
     }
     if (c.text) it.appendChild(el("div", "text", c.text));
@@ -255,12 +270,12 @@ function renderThread(personId) {
     const text = ta.value.trim();
     if (!text && !t.image) return;
     btn.disabled = true;
-    const data = { personId, text, author: displayName(), authorEmail: user.email, createdAt: serverTimestamp() };
-    if (t.image) data.image = t.image;
+    err.textContent = t.image ? "Отправляю фото…" : "";
     try {
-      await addDoc(collection(db, "comments"), data);
+      await api("POST", "post", { body: { person: personId, text, author: displayName(), image: t.image || undefined } });
       t.draft = "";
       t.image = null;
+      await refreshThread(personId);
     } catch {
       err.textContent = "Сообщение не сохранилось. Попробуйте ещё раз.";
       btn.disabled = false;
@@ -269,35 +284,42 @@ function renderThread(personId) {
   box.appendChild(form);
 }
 
-function attachThread(personId, box) {
-  let t = threads.get(personId);
-  if (!t) { t = { box, items: [], error: "", unsub: null, draft: "" }; threads.set(personId, t); }
-  t.box = box;
-  if (user && db && !t.unsub) {
-    t.unsub = onSnapshot(
-      query(collection(db, "comments"), where("personId", "==", personId)),
-      snap => { t.error = ""; t.items = snap.docs.map(d => ({ id: d.id, ...d.data() })); renderThread(personId); },
-      e => {
-        t.error = e?.code === "permission-denied"
-          ? `Адрес ${user.email} не в списке тех, кому открыты комментарии. Напишите Александру, чтобы он добавил его.`
-          : "Комментарии не загрузились. Обновите страницу.";
-        t.unsub = null;
-        renderThread(personId);
-      });
+async function refreshThread(personId) {
+  const t = threads.get(personId);
+  if (!t || !user) return;
+  try {
+    const { messages } = await api("GET", "thread", { query: { person: personId } });
+    const changed = !t.loaded || t.error || JSON.stringify(messages) !== JSON.stringify(t.items);
+    t.items = messages; t.loaded = true; t.error = "";
+    // Не перерисовываем без изменений, чтобы не сбить набор текста
+    if (changed) renderThread(personId);
+  } catch (e) {
+    if (e.status === 401 || e.status === 403) return signOutLocal();
+    t.error = "Сообщения не загрузились. Обновите страницу.";
+    renderThread(personId);
   }
-  renderThread(personId);
 }
 
-function detachAll() {
-  for (const t of threads.values()) { t.unsub?.(); t.unsub = null; t.items = []; t.error = ""; }
+function attachThread(personId, box) {
+  let t = threads.get(personId);
+  if (!t) { t = { box, items: [], error: "", draft: "", image: null, loaded: false }; threads.set(personId, t); }
+  t.box = box;
+  renderThread(personId);
+  refreshThread(personId);
 }
+
+// Пока открыт чат и вкладка видна, раз в 30 секунд проверяем новые сообщения
+setInterval(() => {
+  if (!user || document.visibilityState !== "visible") return;
+  for (const [id, t] of threads) if (t.box.isConnected && t.loaded) refreshThread(id);
+}, POLL_MS);
 
 // Секция в карточке человека: добавляем после каждой перерисовки справки
 const drawerBody = document.getElementById("d-body");
 let drawerThread = null;
 function syncDrawer() {
   const key = typeof drawerKey === "string" ? drawerKey : null; // eslint-disable-line no-undef
-  if (!drawerBody || !key || key.startsWith("slot:")) return;
+  if (!user || !drawerBody || !key || key.startsWith("slot:")) return;
   let sec = drawerBody.querySelector(".cm-sec");
   if (sec && sec.dataset.key === key) return;
   sec?.remove();
@@ -307,123 +329,113 @@ function syncDrawer() {
   const box = el("div");
   sec.appendChild(box);
   drawerBody.appendChild(sec);
-  if (drawerThread && drawerThread !== key) {
-    const old = threads.get(drawerThread);
-    old?.unsub?.(); threads.delete(drawerThread);
-  }
+  if (drawerThread && drawerThread !== key) threads.delete(drawerThread);
   drawerThread = key;
   attachThread(key, box);
 }
 if (drawerBody) new MutationObserver(syncDrawer).observe(drawerBody, { childList: true });
 
 // ─── Вход ────────────────────────────────────────────────────────────────
-async function startSignIn() {
-  if (!auth) return;
-  const email = await ask({
-    title: "Вход для комментариев",
-    text: "Пришлём ссылку для входа на ваш email. Откройте её в этом же браузере.",
-    label: "Email", type: "email", value: store.get(EMAIL_KEY) || "", ok: "Отправить ссылку",
-  });
-  if (!email) return;
-  try {
-    await sendSignInLinkToEmail(auth, email, { url: location.href.split("#")[0].split("?")[0], handleCodeInApp: true });
-    store.set(EMAIL_KEY, email);
-    authBtn.textContent = "Ссылка отправлена";
-    setTimeout(() => { if (!user) authBtn.textContent = "Войти"; }, 8000);
-  } catch {
-    alert("Не получилось отправить письмо. Проверьте адрес и попробуйте ещё раз.");
-  }
-}
-
-async function completeSignInFromLink() {
-  if (!isSignInWithEmailLink(auth, location.href)) return;
-  let email = store.get(EMAIL_KEY);
-  if (!email) {
-    email = await ask({
-      title: "Подтвердите email",
-      text: "Ссылка открыта в другом браузере. Введите адрес, на который она пришла.",
-      label: "Email", type: "email", ok: "Войти",
-    });
-    if (!email) return;
-  }
-  try {
-    await signInWithEmailLink(auth, email, location.href);
-    store.del(EMAIL_KEY);
-    history.replaceState(null, "", location.pathname);
-  } catch {
-    alert("Ссылка устарела или уже использована. Запросите новую.");
-  }
-}
-
-async function askName() {
-  const name = await ask({
-    title: "Как вас подписывать?",
-    text: "Имя будет видно рядом с вашими комментариями, например «Галина» или «тётя Таня».",
-    label: "Имя", value: displayName(), ok: "Сохранить",
-  });
-  if (name) { store.set(NAME_KEY, name); for (const id of threads.keys()) renderThread(id); }
-}
-
-authBtn.addEventListener("click", async () => {
-  if (!auth) return;
-  if (!user) return startSignIn();
-  if (confirm(`Вы вошли как ${user.email} (подпись «${displayName()}»).\nОК — выйти, Отмена — сменить подпись.`)) await signOut(auth);
-  else await askName();
-});
-
-// ─── Экран входа и загрузка древа ────────────────────────────────────────
-// Данные древа и фото лежат в Firestore (tree/snapshot, treePhotos/*) и читаются
-// только после входа адресом из списка — в публичных файлах сайта их нет.
 const gateText = document.getElementById("gate-text");
 const gateLogin = document.getElementById("gate-login");
 const gateLogout = document.getElementById("gate-logout");
-let treeLoaded = false;
+const GATE_HELLO = "Страница доступна только членам семьи. Войдите по ссылке, которая придёт на ваш email.";
 const gate = (text, { login = false, logout = false } = {}) => {
   if (gateText) gateText.textContent = text;
   if (gateLogin) gateLogin.hidden = !login;
   if (gateLogout) gateLogout.hidden = !logout;
 };
-gateLogin?.addEventListener("click", () => startSignIn());
-gateLogout?.addEventListener("click", () => signOut(auth));
 
-async function loadTree() {
-  if (treeLoaded) return;
-  gate("Загружаю древо…");
+const ERRORS = {
+  "not-allowed": "Этого адреса нет в списке семьи. Напишите Александру, чтобы он его добавил.",
+  "cooldown": "Письмо только что отправлено. Подождите минуту, прежде чем запросить ещё одно.",
+  "daily-limit": "На сегодня писем отправлено слишком много. Попробуйте завтра.",
+  "bad-email": "Похоже, в адресе опечатка.",
+};
+
+async function startSignIn() {
+  const email = await ask({
+    title: "Вход",
+    text: "Пришлём ссылку для входа на ваш email. Её можно открыть в любом браузере.",
+    label: "Email", type: "email", value: "", ok: "Отправить ссылку",
+  });
+  if (!email) return;
+  gate("Отправляю письмо…");
   try {
-    const [snap, photos] = await Promise.all([getDoc(doc(db, "tree", "snapshot")), getDocs(collection(db, "treePhotos"))]);
-    if (!snap.exists()) { gate("Древо ещё не загружено. Напишите Александру.", { logout: true }); return; }
-    photos.forEach(p => { window.__TREE_PHOTOS__[p.id] = p.data().dataUrl; });
-    window.__resolveTree?.(JSON.parse(snap.data().json));
-    treeLoaded = true;
-    document.body.classList.remove("locked");
+    await api("POST", "login-request", { body: { email } });
+    gate(`Письмо со ссылкой отправлено на ${email}. Откройте его и нажмите «Войти». Если письма нет, проверьте «Спам».`, { login: true });
+    if (gateLogin) gateLogin.textContent = "Отправить ещё раз";
   } catch (e) {
-    gate(e?.code === "permission-denied"
-      ? `Адрес ${user?.email} не в списке тех, кому открыто древо. Напишите Александру, чтобы он добавил его.`
-      : "Древо не загрузилось. Обновите страницу.", { logout: true });
+    gate(ERRORS[e.code] || "Не получилось отправить письмо. Попробуйте ещё раз чуть позже.", { login: true });
   }
 }
 
-// ─── Запуск ──────────────────────────────────────────────────────────────
-attachThread(GENERAL, generalBox);
-if (!cfg) {
-  authBtn.hidden = true;
-  gate("Вход ещё не настроен.");
-} else {
-  const app = initializeApp(cfg);
-  auth = getAuth(app);
-  auth.languageCode = "ru";
-  db = getFirestore(app);
-  onAuthStateChanged(auth, u => {
-    if (!u && treeLoaded) { location.reload(); return; } // вышел — убираем древо со страницы
-    user = u;
-    if (u) loadTree();
-    else gate("Страница доступна только членам семьи. Войдите по ссылке, которая придёт на ваш email.", { login: true });
-    detachAll();
-    authBtn.textContent = u ? displayName() : "Войти";
-    authBtn.classList.toggle("on", !!u);
-    authBtn.title = u ? `Вы вошли как ${u.email}. Нажмите, чтобы выйти или сменить подпись.` : "Войти по ссылке на email, чтобы читать и писать комментарии";
-    for (const [id, t] of threads) attachThread(id, t.box);
-    if (u && !store.get(NAME_KEY)) askName();
-  });
-  completeSignInFromLink();
+async function completeSignInFromLink() {
+  const token = new URLSearchParams(location.search).get("login");
+  if (!token) return;
+  history.replaceState(null, "", location.pathname);
+  gate("Вхожу…");
+  try {
+    const { session } = await api("POST", "login-confirm", { body: { token } });
+    store.set(SESSION_KEY, session);
+  } catch (e) {
+    gate(e.code === "not-allowed" ? ERRORS["not-allowed"] : "Ссылка устарела (она действует 30 минут). Запросите новую.", { login: true });
+    throw e;
+  }
 }
+
+function signOutLocal() {
+  store.del(SESSION_KEY);
+  location.reload(); // убираем древо со страницы
+}
+
+async function askName() {
+  const name = await ask({
+    title: "Как вас подписывать?",
+    text: "Имя будет видно рядом с вашими сообщениями, например «Галина» или «тётя Таня».",
+    label: "Имя", value: displayName(), ok: "Сохранить",
+  });
+  if (name) { store.set(NAME_KEY, name); authBtn.textContent = name; for (const id of threads.keys()) renderThread(id); }
+}
+
+authBtn.addEventListener("click", async () => {
+  if (!user) return startSignIn();
+  if (confirm(`Вы вошли как ${user.email} (подпись «${displayName()}»).\nОК — выйти, Отмена — сменить подпись.`)) signOutLocal();
+  else await askName();
+});
+gateLogin?.addEventListener("click", () => startSignIn());
+gateLogout?.addEventListener("click", () => signOutLocal());
+
+// ─── Загрузка древа ──────────────────────────────────────────────────────
+async function loadTree() {
+  gate("Загружаю древо…");
+  const data = await api("GET", "tree");
+  const ids = [...new Set(Object.values(data.people || {}).map(p => p.photo).filter(Boolean))];
+  await Promise.all(ids.map(id => imageUrl("photos", id)
+    .then(src => { window.__TREE_PHOTOS__[id] = src; })
+    .catch(() => {})));
+  window.__resolveTree?.(data);
+  document.body.classList.remove("locked");
+}
+
+async function start() {
+  if (!API) { gate("Вход ещё не настроен."); authBtn.hidden = true; return; }
+  try { await completeSignInFromLink(); } catch { return; }
+  if (!store.get(SESSION_KEY)) { gate(GATE_HELLO, { login: true }); return; }
+  try {
+    user = await api("GET", "me");
+    await loadTree();
+  } catch (e) {
+    if (e.status === 401) { store.del(SESSION_KEY); gate(GATE_HELLO, { login: true }); return; }
+    if (e.status === 403) { gate(ERRORS["not-allowed"], { logout: true }); return; }
+    gate("Древо не загрузилось. Проверьте интернет и обновите страницу.", { logout: true });
+    return;
+  }
+  authBtn.textContent = displayName();
+  authBtn.classList.add("on");
+  authBtn.title = `Вы вошли как ${user.email}. Нажмите, чтобы выйти или сменить подпись.`;
+  attachThread(GENERAL, generalBox);
+  syncDrawer();
+  if (!store.get(NAME_KEY)) askName();
+}
+start();

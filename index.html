@@ -4,7 +4,7 @@
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Alegreya:ital,wght@0,500;0,700;1,500&family=PT+Sans:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Alegreya:ital,wght@0,500;0,700;1,500&family=PT+Sans:wght@400;700&display=swap" rel="stylesheet" media="print" onload="this.media=&quot;all&quot;">
 <style>
   /* Layout: compact pedigree in three directions, or one person at a time with a minimap; editor dialog and research journal below */
   :root {
@@ -608,7 +608,7 @@
 </div></div>
 <script>document.body.classList.add("locked");</script>
 <script>
-// Данные древа приходят из Firestore после входа (см. comments.js):
+// Данные древа приходят из Яндекс Облака после входа (см. comments.js):
 // до этого все подписки ждут window.__treeReady.
 window.__treeReady = new Promise(res => { window.__resolveTree = res; });
 window.__TREE_PHOTOS__ = {};
