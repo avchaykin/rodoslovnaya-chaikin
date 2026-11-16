@@ -379,7 +379,7 @@ async function completeSignInFromLink() {
     const { session } = await api("POST", "login-confirm", { body: { token } });
     store.set(SESSION_KEY, session);
   } catch (e) {
-    gate(e.code === "not-allowed" ? ERRORS["not-allowed"] : "Ссылка устарела (она действует 30 минут). Запросите новую.", { login: true });
+    gate(e.code === "not-allowed" ? ERRORS["not-allowed"] : "Ссылка устарела (она действует сутки). Запросите новую.", { login: true });
     throw e;
   }
 }
