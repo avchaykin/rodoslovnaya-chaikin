@@ -7,10 +7,14 @@ const NAME_KEY = "cm-display-name";
 const GENERAL = "general";
 const POLL_MS = 30000;
 
+// Если браузер не даёт localStorage (приватный режим, встроенный браузер почты),
+// держим значения хотя бы в памяти вкладки, чтобы вход не уходил по кругу
+const memory = new Map();
+let storageOk = true;
 const store = {
-  get: k => { try { return localStorage.getItem(k); } catch { return null; } },
-  set: (k, v) => { try { localStorage.setItem(k, v); } catch {} },
-  del: k => { try { localStorage.removeItem(k); } catch {} },
+  get: k => { try { return localStorage.getItem(k) ?? memory.get(k) ?? null; } catch { return memory.get(k) ?? null; } },
+  set: (k, v) => { memory.set(k, v); try { localStorage.setItem(k, v); } catch { storageOk = false; } },
+  del: k => { memory.delete(k); try { localStorage.removeItem(k); } catch {} },
 };
 
 // ─── Стили ────────────────────────────────────────────────────────────────
@@ -434,6 +438,12 @@ async function start() {
   authBtn.textContent = displayName();
   authBtn.classList.add("on");
   authBtn.title = `Вы вошли как ${user.email}. Нажмите, чтобы выйти или сменить подпись.`;
+  if (!storageOk) {
+    const note = el("div", "cm-note", "Этот браузер не запоминает вход, и в следующий раз понадобится новая ссылка. Чтобы не входить каждый раз, откройте страницу в обычном Safari или Chrome и запросите ссылку там.");
+    note.style.cssText = "position:fixed;left:12px;right:12px;bottom:12px;z-index:900;background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:10px 14px;box-shadow:0 4px 18px rgba(0,0,0,.15)";
+    note.addEventListener("click", () => note.remove());
+    document.body.appendChild(note);
+  }
   attachThread(GENERAL, generalBox);
   syncDrawer();
   if (!store.get(NAME_KEY)) askName();
